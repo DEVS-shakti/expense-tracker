@@ -6,7 +6,7 @@ A powerful and modern personal finance manager built with **React**, **Firebase*
 
 ## 🔗 Live Demo
 
-> [🚀 Try the App Live](https://your-live-url.vercel.app)
+> [🚀 Try the App Live]([https://your-live-url.vercel.app](https://expense-tracker-git-main-devs-shaktis-projects.vercel.app/))
 
 ---
 
