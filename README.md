@@ -38,11 +38,12 @@ Optimized for all screen sizes including phones, tablets, and desktops.
 ### 📦 Installation Steps
 
 ```bash
-git clone https://github.com/your-username/expense-tracker.git
+git clone https://github.com/DEVS-shakti/expense-tracker.git
 cd expense-tracker
 npm install 
  ```
 
+### Configure Your Firebase Project
 ```
 // src/firebase/firebase.js
 const firebaseConfig = {
