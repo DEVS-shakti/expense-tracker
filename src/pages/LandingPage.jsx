@@ -1,6 +1,7 @@
 // src/pages/Landing.jsx
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 import {
   ResponsiveContainer,
   PieChart,
@@ -21,73 +22,169 @@ import {
 } from "recharts";
 
 import { useAuth } from "../context/AuthContext";
-import heroImg from "../assets/finnance.svg"; // optional image
-import work from "../assets/work.svg"; // optional image
-import secure from "../assets/secure.svg"; // optional image
-import Visual from "../assets/visual.svg"; // optional image
+import heroImg from "../assets/finnance.svg";
+import work from "../assets/work.svg";
+import secure from "../assets/secure.svg";
+import Visual from "../assets/visual.svg";
 import "../index.css";
+
 const Landing = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleStart = () => {
     if (user) navigate("/dashboard");
     else navigate("/login");
   };
 
+  const handleDemo = () => {
+    const demoSection = document.getElementById("insight");
+    if (demoSection) {
+      demoSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="overflow-x-hidden min-h-screen flex flex-col justify-between bg-white text-gray-800">
       {/* Navbar */}
-      <header className="flex justify-between items-center px-6 py-4 shadow bg-white sticky top-0 z-50">
-        <h1 className="text-2xl font-bold text-indigo-700">💸 ExpenseTrack</h1>
-        <nav className="space-x-4">
-          <a href="#adtg" className="decoration-white">
-            <button className=" text-black py-2 px-4 rounded-lg shadow hover:bg-blue-600 hover:text-white transition">
-              Advantages
-            </button>
-          </a>
-          <a href="#insight" className="decoration-white">
-            <button className=" text-black py-2 px-4 rounded-lg shadow hover:bg-blue-600 hover:text-white transition">
-              Insights
-            </button>
-          </a>
+      <header className="px-4 sm:px-6 py-4 shadow bg-white sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-indigo-700">ExpenseTrack</h1>
+
           <button
-            onClick={() => navigate("/login")}
-            className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:text-black hover:bg-white transition"
+            className="md:hidden text-gray-700"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-label="Toggle navigation menu"
           >
-            Login
+            {menuOpen ? <X /> : <Menu />}
           </button>
-          <button
-            onClick={() => navigate("/register")}
-            className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:text-black hover:bg-white transition"
-          >
-            Register
-          </button>
-        </nav>
+
+          <nav className="hidden md:flex items-center space-x-4">
+            <a href="#adtg" className="decoration-white">
+              <button className="text-black py-2 px-4 rounded-lg shadow hover:bg-blue-600 hover:text-white transition">
+                Advantages
+              </button>
+            </a>
+            <a href="#insight" className="decoration-white">
+              <button className="text-black py-2 px-4 rounded-lg shadow hover:bg-blue-600 hover:text-white transition">
+                Insights
+              </button>
+            </a>
+            {user ? (
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:text-black hover:bg-white transition"
+              >
+                Dashboard
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:text-black hover:bg-white transition"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => navigate("/register")}
+                  className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:text-black hover:bg-white transition"
+                >
+                  Register
+                </button>
+              </>
+            )}
+          </nav>
+        </div>
+
+        {menuOpen && (
+          <div className="md:hidden mt-4 border-t border-gray-200 pt-4">
+            <div className="flex flex-col gap-3">
+              <a href="#adtg" className="w-full" onClick={() => setMenuOpen(false)}>
+                <button className="w-full text-left text-black py-2 px-4 rounded-lg shadow hover:bg-blue-600 hover:text-white transition">
+                  Advantages
+                </button>
+              </a>
+              <a href="#insight" className="w-full" onClick={() => setMenuOpen(false)}>
+                <button className="w-full text-left text-black py-2 px-4 rounded-lg shadow hover:bg-blue-600 hover:text-white transition">
+                  Insights
+                </button>
+              </a>
+              {user ? (
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    navigate("/dashboard");
+                  }}
+                  className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:text-black hover:bg-white transition"
+                >
+                  Dashboard
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      navigate("/login");
+                    }}
+                    className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:text-black hover:bg-white transition"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      navigate("/register");
+                    }}
+                    className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:text-black hover:bg-white transition"
+                  >
+                    Register
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
-      <section className="text-center px-6 py-16 bg-gradient-to-br from-indigo-100 to-white">
-        <h2 className="text-5xl font-bold mb-4 text-indigo-700">
-          Track, Save, Grow.
-        </h2>
-        <p className="text-xl text-gray-600 mb-8">
-          Simplify your finances with a smart, personal expense tracker.
-        </p>
-        <button
-          onClick={handleStart}
-          className="bg-indigo-600 text-white px-8 py-3 rounded-full text-lg shadow hover:bg-indigo-700 transition"
-        >
-          Get Started
-        </button>
+      <section className="px-6 py-16 bg-gradient-to-br from-indigo-100 to-white">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+          <div className="text-center md:text-left">
+            <p className="text-sm uppercase tracking-widest text-indigo-600 mb-3 font-semibold">
+              Expense Management, Simplified
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-indigo-700 leading-tight">
+              Stay in control of every rupee you spend
+            </h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Plan budgets, track transactions, and understand your money with
+              interactive dashboards built for everyday use.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+              <button
+                onClick={handleStart}
+                className="bg-indigo-600 text-white px-8 py-3 rounded-full text-lg shadow hover:bg-indigo-700 transition"
+              >
+                Get Started
+              </button>
+              <button
+                onClick={handleDemo}
+                className="bg-white text-indigo-700 border border-indigo-300 px-8 py-3 rounded-full text-lg shadow hover:bg-indigo-50 transition"
+              >
+                View Demo
+              </button>
+            </div>
+          </div>
 
-        {heroImg && (
-          <img
-            src={heroImg}
-            alt="Finance Illustration"
-            className="mt-12 w-full max-w-md mx-auto"
-          />
-        )}
+          {heroImg && (
+            <img
+              src={heroImg}
+              alt="Finance Illustration"
+              className="w-full max-w-md mx-auto"
+            />
+          )}
+        </div>
       </section>
 
       {/* Features Section - Full Width Flex Column with SVGs */}
@@ -104,7 +201,7 @@ const Landing = () => {
           <div className="w-full flex flex-col md:flex-row items-center gap-6 hover:bg-indigo-50 p-10 rounded-xl shadow-md shadow-black ">
             <img alt="Analytics" src={Visual} className="w-48 h-48" />
             <div>
-              <h4 className="text-3xl font-bold mb-2">📊 Visual Reports</h4>
+              <h4 className="text-3xl font-bold mb-2">Visual Reports</h4>
               <p className="text-gray-600">
                 Track your income, expenses, and budgets with beautiful charts
                 and real-time data visualizations.
@@ -115,9 +212,7 @@ const Landing = () => {
           {/* Advantage 2 */}
           <div className="flex flex-col md:flex-row items-center gap-6 hover:bg-indigo-50 p-6 rounded-xl shadow-md shadow-black ">
             <div>
-              <h4 className="text-3xl font-bold  mb-2">
-                🔒 Secure & Private
-              </h4>
+              <h4 className="text-3xl font-bold  mb-2">Secure & Private</h4>
               <p className="text-gray-600">
                 Your data is secured with Firebase Auth and Firestore rules.
                 Only you can access your finances.
@@ -130,9 +225,9 @@ const Landing = () => {
           <div className="flex flex-col md:flex-row items-center gap-6 hover:bg-indigo-50 p-6 rounded-xl shadow-md shadow-black ">
             <img src={work} alt="Responsive" className="w-48 h-48" />
             <div>
-              <h4 className="text-3xl font-bold mb-2">📱 Works Anywhere</h4>
+              <h4 className="text-3xl font-bold mb-2">Works Anywhere</h4>
               <p className="text-gray-600">
-                Fully responsive — works on all screen sizes: mobile, tablet,
+                Fully responsive - works on all screen sizes: mobile, tablet,
                 and desktop.
               </p>
             </div>
@@ -342,10 +437,10 @@ const Landing = () => {
       {/* Footer */}
       <footer className="bg-gray-100 text-slate-950 text-center p-6">
         <p>
-          &copy; {new Date().getFullYear()} ExpenseTrack. Built with 💖 using
+          &copy; {new Date().getFullYear()} ExpenseTrack. Built with love using
           React & Firebase.
         </p>
-        <p className="text-sm mt-2">Made by DevSahu 😎</p>
+        <p className="text-sm mt-2">Made by DevSahu</p>
       </footer>
     </div>
   );

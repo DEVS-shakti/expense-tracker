@@ -30,6 +30,7 @@ import "../index.css";
 import TransactionList from "../components/Transaction/TransactionList";
 import TransactionForm from "../components/Transaction/TransactionForm";
 import Insights from "./Insight";
+import { getUserDisplayName } from "../utils/user";
 import { db } from "../firebase/firebase";
 import {
   collection,
@@ -47,7 +48,7 @@ const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
 
-  const displayName = user.email.split("@")[0];
+  const displayName = getUserDisplayName(user);
 
   const handleLogout = async () => {
     try {
