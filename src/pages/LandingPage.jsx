@@ -15,6 +15,8 @@ import {
   CheckCircle2,
   Instagram,
   Atom,
+  Github,
+  BriefcaseBusiness,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -384,12 +386,43 @@ const Landing = () => {
           <div>
             <p className="font-semibold text-slate-900">Social</p>
             <div className="mt-2 text-sm text-slate-600 space-y-1">
-              <p className="inline-flex items-center gap-2">
+              <a
+                href="https://www.instagram.com/dev_sahu_785/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 hover:text-pink-600"
+              >
                 <Instagram className="w-4 h-4" /> dev_sahu_785
-              </p>
-              <p className="inline-flex items-center gap-2">
+              </a>
+              <br />
+              <a
+                href="https://www.instagram.com/saktey_785/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 hover:text-pink-600"
+              >
                 <Instagram className="w-4 h-4" /> saktey_785
-              </p>
+              </a>
+              <br />
+              <a
+                href="https://shakti2024.netlify.app"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 hover:text-indigo-700"
+              >
+                <BriefcaseBusiness className="w-4 h-4" />
+                Portfolio: shakti2024.netlify.app
+              </a>
+              <br />
+              <a
+                href="https://github.com/DEVS-shakti"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 hover:text-indigo-700"
+              >
+                <Github className="w-4 h-4" />
+                GitHub: github.com/DEVS-shakti
+              </a>
             </div>
           </div>
         </div>
