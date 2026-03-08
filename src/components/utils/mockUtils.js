@@ -34,7 +34,15 @@ export const MOCK_BUDGETS = {
   },
 };
 
-export const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00bcd4', '#f44336', '#9c27b0'];
+export const COLORS = [
+  "#2563EB",
+  "#06B6D4",
+  "#22C55E",
+  "#F59E0B",
+  "#F97316",
+  "#EF4444",
+  "#8B5CF6",
+];
 
 export const formatCurrency = (value) => {
   return new Intl.NumberFormat('en-IN', {

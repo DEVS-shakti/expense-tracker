@@ -122,7 +122,7 @@ const RegisterForm = () => {
             {error && <p className="auth-error">{error}</p>}
 
             <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Creating account..." : "Register"}
+              {isSubmitting ? (<span className="inline-flex items-center gap-2"><span className="btn-spinner" /> Creating account...</span>) : ("Register")}
             </button>
 
             <div className="auth-divider">
@@ -135,7 +135,7 @@ const RegisterForm = () => {
               onClick={handleGoogleSignUp}
               disabled={isSubmitting}
             >
-              Continue with Google
+              {isSubmitting ? "Please wait..." : "Continue with Google"}
             </button>
           </form>
 
@@ -153,3 +153,4 @@ const RegisterForm = () => {
 };
 
 export default RegisterForm;
+

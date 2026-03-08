@@ -80,7 +80,7 @@ const LoginForm = () => {
             {error && <p className="auth-error">{error}</p>}
 
             <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Signing in..." : "Login"}
+              {isSubmitting ? (<span className="inline-flex items-center gap-2"><span className="btn-spinner" /> Signing in...</span>) : ("Login")}
             </button>
 
             <div className="auth-divider">
@@ -93,7 +93,7 @@ const LoginForm = () => {
               onClick={handleGoogleSignIn}
               disabled={isSubmitting}
             >
-              Continue with Google
+              {isSubmitting ? "Please wait..." : "Continue with Google"}
             </button>
           </form>
 
@@ -111,3 +111,4 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+

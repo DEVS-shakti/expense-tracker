@@ -1,0 +1,118 @@
+{
+  "categories": [
+    { "name": "Food", "type": "expense" },
+    { "name": "Transport", "type": "expense" },
+    { "name": "Rent", "type": "expense" },
+    { "name": "Utilities", "type": "expense" },
+    { "name": "Entertainment", "type": "expense" },
+    { "name": "Salary", "type": "income" },
+    { "name": "Freelance", "type": "income" },
+    { "name": "Bonus", "type": "income" },
+    { "name": "Investment", "type": "income" },
+    { "name": "Gift", "type": "income" }
+  ],
+  "transactions": [
+    {
+      "id": "demo-txn-01",
+      "amount": 85000,
+      "type": "income",
+      "category": "Salary",
+      "description": "Monthly salary credit",
+      "daysAgo": 25
+    },
+    {
+      "id": "demo-txn-02",
+      "amount": 12000,
+      "type": "income",
+      "category": "Freelance",
+      "description": "Landing page redesign project",
+      "daysAgo": 19
+    },
+    {
+      "id": "demo-txn-03",
+      "amount": 6000,
+      "type": "income",
+      "category": "Investment",
+      "description": "Mutual fund redemption",
+      "daysAgo": 12
+    },
+    {
+      "id": "demo-txn-04",
+      "amount": 25000,
+      "type": "expense",
+      "category": "Rent",
+      "description": "Apartment rent",
+      "daysAgo": 23
+    },
+    {
+      "id": "demo-txn-05",
+      "amount": 4300,
+      "type": "expense",
+      "category": "Food",
+      "description": "Groceries and essentials",
+      "daysAgo": 18
+    },
+    {
+      "id": "demo-txn-06",
+      "amount": 2200,
+      "type": "expense",
+      "category": "Transport",
+      "description": "Fuel + metro card recharge",
+      "daysAgo": 14
+    },
+    {
+      "id": "demo-txn-07",
+      "amount": 2800,
+      "type": "expense",
+      "category": "Utilities",
+      "description": "Electricity and internet",
+      "daysAgo": 10
+    },
+    {
+      "id": "demo-txn-08",
+      "amount": 1600,
+      "type": "expense",
+      "category": "Entertainment",
+      "description": "Movies and subscriptions",
+      "daysAgo": 7
+    },
+    {
+      "id": "demo-txn-09",
+      "amount": 7500,
+      "type": "income",
+      "category": "Bonus",
+      "description": "Performance bonus",
+      "daysAgo": 5
+    },
+    {
+      "id": "demo-txn-10",
+      "amount": 1400,
+      "type": "expense",
+      "category": "Food",
+      "description": "Weekend dining",
+      "daysAgo": 2
+    }
+  ],
+  "budgets": [
+    {
+      "month": "current",
+      "categoryLimits": {
+        "Food": 10000,
+        "Transport": 5000,
+        "Rent": 25000,
+        "Utilities": 7000,
+        "Entertainment": 5000
+      }
+    },
+    {
+      "month": "previous",
+      "categoryLimits": {
+        "Food": 9000,
+        "Transport": 4500,
+        "Rent": 25000,
+        "Utilities": 6500,
+        "Entertainment": 4500
+      }
+    }
+  ]
+}

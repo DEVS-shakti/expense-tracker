@@ -73,6 +73,59 @@ body {
   color: #ffffff;
 }
 
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  min-height: 180px;
+}
+
+.loading-screen-full {
+  min-height: 100vh;
+  background: radial-gradient(circle at 0% 0%, #dbeafe, #eff6ff 35%, #ffffff 100%);
+}
+
+.loading-screen-compact {
+  min-height: 120px;
+}
+
+.loading-orbit {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid #bfdbfe;
+  border-top-color: #1d4ed8;
+  animation: spin 0.85s linear infinite;
+}
+
+.loading-label {
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.btn-spinner-dark {
+  border-color: rgba(30, 41, 59, 0.3);
+  border-top-color: #0f172a;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 html.dark body {
   background-color: #020617;
   color: #e2e8f0;
@@ -90,6 +143,19 @@ html.dark .theme-switcher-btn {
 html.dark .theme-switcher-btn:hover {
   background: #334155;
   color: #f8fafc;
+}
+
+html.dark .loading-screen-full {
+  background: radial-gradient(circle at 0% 0%, #111827, #0f172a 35%, #020617 100%);
+}
+
+html.dark .loading-orbit {
+  border-color: #334155;
+  border-top-color: #60a5fa;
+}
+
+html.dark .loading-label {
+  color: #cbd5e1;
 }
 
 html.dark .bg-white {

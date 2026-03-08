@@ -1,12 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db, auth } from "../firebase/firebase";
 import {
   PieChart,
@@ -23,8 +16,16 @@ import {
   Bar,
   ResponsiveContainer,
 } from "recharts";
-import { COLORS } from "../components/utils/mockUtils";
-import { formatCurrency } from "../components/utils/mockUtils";
+import { COLORS, formatCurrency } from "../components/utils/mockUtils";
+import LoadingScreen from "../components/ui/LoadingScreen";
+
+const parseTxnDate = (rawDate) => {
+  if (!rawDate) return null;
+  if (rawDate?.toDate) return rawDate.toDate();
+  if (rawDate?.seconds) return new Date(rawDate.seconds * 1000);
+  const date = new Date(rawDate);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
 
 const Insight = () => {
   const [transactions, setTransactions] = useState([]);
@@ -34,23 +35,31 @@ const Insight = () => {
   const currentUser = auth.currentUser;
   const today = new Date();
   const currentMonthKey = `${today.getFullYear()}-${String(
-    today.getMonth() + 1
+    today.getMonth() + 1,
   ).padStart(2, "0")}`;
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!currentUser) return;
+      if (!currentUser) {
+        setLoading(false);
+        return;
+      }
 
       const txnRef = collection(db, `users/${currentUser.uid}/transactions`);
       const txnSnapshot = await getDocs(txnRef);
-      const txnData = txnSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
+      const txnData = txnSnapshot.docs.map((snapshotDoc) => ({
+        id: snapshotDoc.id,
+        ...snapshotDoc.data(),
       }));
 
-      const budgetRef = doc(db, `users/${currentUser.uid}/budgets/${currentMonthKey}`);
+      const budgetRef = doc(
+        db,
+        `users/${currentUser.uid}/budgets/${currentMonthKey}`,
+      );
       const budgetSnap = await getDoc(budgetRef);
-      const budgetData = budgetSnap.exists() ? budgetSnap.data() : { categoryLimits: {} };
+      const budgetData = budgetSnap.exists()
+        ? budgetSnap.data()
+        : { categoryLimits: {} };
 
       setTransactions(txnData);
       setBudgets(budgetData.categoryLimits || {});
@@ -58,34 +67,39 @@ const Insight = () => {
     };
 
     fetchData();
-  }, [currentUser]);
+  }, [currentMonthKey, currentUser]);
 
-  // Monthly summary
   const { income, expense } = useMemo(() => {
-    let income = 0,
-      expense = 0;
-    transactions.forEach((t) => {
-      const date = new Date(t.date?.seconds * 1000);
+    let incomeTotal = 0;
+    let expenseTotal = 0;
+
+    transactions.forEach((txn) => {
+      const date = parseTxnDate(txn.date);
+      if (!date) return;
       const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
       if (key === currentMonthKey) {
-        if (t.type === "income") income += t.amount;
-        else expense += t.amount;
+        if (txn.type === "income") incomeTotal += txn.amount;
+        else expenseTotal += txn.amount;
       }
     });
-    return { income, expense };
-  }, [transactions]);
+
+    return { income: incomeTotal, expense: expenseTotal };
+  }, [transactions, currentMonthKey]);
 
   const spendingByCategory = useMemo(() => {
     const map = {};
-    transactions.forEach((t) => {
-      const date = new Date(t.date?.seconds * 1000);
+
+    transactions.forEach((txn) => {
+      const date = parseTxnDate(txn.date);
+      if (!date) return;
       const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-      if (t.type === "expense" && key === currentMonthKey) {
-        map[t.category] = (map[t.category] || 0) + t.amount;
+      if (txn.type === "expense" && key === currentMonthKey) {
+        map[txn.category] = (map[txn.category] || 0) + txn.amount;
       }
     });
+
     return Object.entries(map).map(([name, value]) => ({ name, value }));
-  }, [transactions]);
+  }, [transactions, currentMonthKey]);
 
   const trendData = useMemo(() => {
     const map = {};
@@ -101,12 +115,14 @@ const Insight = () => {
       };
     }
 
-    transactions.forEach((t) => {
-      const d = new Date(t.date?.seconds * 1000);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    transactions.forEach((txn) => {
+      const date = parseTxnDate(txn.date);
+      if (!date) return;
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+
       if (map[key]) {
-        if (t.type === "income") map[key].Income += t.amount;
-        else map[key].Expense += t.amount;
+        if (txn.type === "income") map[key].Income += txn.amount;
+        else map[key].Expense += txn.amount;
       }
     });
 
@@ -115,41 +131,51 @@ const Insight = () => {
 
   const spendingVsBudget = useMemo(() => {
     const actual = {};
-    transactions.forEach((t) => {
-      const d = new Date(t.date?.seconds * 1000);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-      if (key === currentMonthKey && t.type === "expense") {
-        actual[t.category] = (actual[t.category] || 0) + t.amount;
+
+    transactions.forEach((txn) => {
+      const date = parseTxnDate(txn.date);
+      if (!date) return;
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+
+      if (key === currentMonthKey && txn.type === "expense") {
+        actual[txn.category] = (actual[txn.category] || 0) + txn.amount;
       }
     });
 
-    return Object.keys({ ...budgets, ...actual }).map((cat) => ({
-      name: cat,
-      Budget: budgets[cat] || 0,
-      Actual: actual[cat] || 0,
+    return Object.keys({ ...budgets, ...actual }).map((category) => ({
+      name: category,
+      Budget: budgets[category] || 0,
+      Actual: actual[category] || 0,
     }));
-  }, [budgets, transactions]);
+  }, [budgets, transactions, currentMonthKey]);
 
-  if (loading) return <div className="p-6">Loading Insights...</div>;
+  if (loading) {
+    return <LoadingScreen label="Crunching your latest insights..." compact />;
+  }
 
   return (
     <div className="p-6 space-y-8">
       <div className="grid md:grid-cols-3 gap-6">
         <div className="bg-white p-4 rounded-xl shadow">
           <h2 className="text-lg text-gray-500">Total Income</h2>
-          <div className="text-3xl text-green-600 font-bold">{formatCurrency(income)}</div>
+          <div className="text-3xl text-green-600 font-bold">
+            {formatCurrency(income)}
+          </div>
         </div>
         <div className="bg-white p-4 rounded-xl shadow">
           <h2 className="text-lg text-gray-500">Total Expense</h2>
-          <div className="text-3xl text-red-600 font-bold">{formatCurrency(expense)}</div>
+          <div className="text-3xl text-red-600 font-bold">
+            {formatCurrency(expense)}
+          </div>
         </div>
         <div className="bg-white p-4 rounded-xl shadow">
           <h2 className="text-lg text-gray-500">Net Savings</h2>
-          <div className="text-3xl text-blue-600 font-bold">{formatCurrency(income - expense)}</div>
+          <div className="text-3xl text-blue-600 font-bold">
+            {formatCurrency(income - expense)}
+          </div>
         </div>
       </div>
 
-      {/* Budget Overview */}
       <div className="bg-white p-4 rounded-xl shadow">
         <h2 className="text-xl font-semibold mb-4">Budget Overview</h2>
         {Object.keys(budgets).length === 0 ? (
@@ -157,7 +183,10 @@ const Insight = () => {
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {Object.entries(budgets).map(([category, limit]) => {
-              const spent = spendingByCategory.find((c) => c.name === category)?.value || 0;
+              const spent =
+                spendingByCategory.find((entry) => entry.name === category)
+                  ?.value || 0;
+
               return (
                 <li key={category} className="border p-3 rounded-lg shadow-sm">
                   <div className="font-medium">{category}</div>
@@ -171,9 +200,7 @@ const Insight = () => {
         )}
       </div>
 
-      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Pie Chart */}
         <div className="bg-white p-6 rounded-xl shadow">
           <h3 className="text-xl font-semibold mb-4">Spending by Category</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -197,7 +224,6 @@ const Insight = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Line Chart */}
         <div className="bg-white p-6 rounded-xl shadow">
           <h3 className="text-xl font-semibold mb-4">Income vs Expense Trend</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -207,14 +233,23 @@ const Insight = () => {
               <YAxis tickFormatter={formatCurrency} />
               <Tooltip formatter={formatCurrency} />
               <Legend />
-              <Line type="monotone" dataKey="Income" stroke="#4CAF50" />
-              <Line type="monotone" dataKey="Expense" stroke="#F44336" />
+              <Line
+                type="monotone"
+                dataKey="Income"
+                stroke="#2563EB"
+                strokeWidth={3}
+              />
+              <Line
+                type="monotone"
+                dataKey="Expense"
+                stroke="#F97316"
+                strokeWidth={3}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Optional Budget Comparison */}
       <div className="bg-white p-6 rounded-xl shadow">
         <h3 className="text-xl font-semibold mb-4">Spending vs Budget</h3>
         <ResponsiveContainer width="100%" height={300}>
@@ -224,8 +259,8 @@ const Insight = () => {
             <YAxis tickFormatter={formatCurrency} />
             <Tooltip formatter={formatCurrency} />
             <Legend />
-            <Bar dataKey="Budget" fill="#8884d8" radius={[10, 10, 0, 0]} />
-            <Bar dataKey="Actual" fill="#82ca9d" radius={[10, 10, 0, 0]} />
+            <Bar dataKey="Budget" fill="#22C55E" radius={[10, 10, 0, 0]} />
+            <Bar dataKey="Actual" fill="#EF4444" radius={[10, 10, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -1,7 +1,10 @@
 // src/context/AuthContext.js
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged,signOut } from 'firebase/auth';
-import { auth } from '../firebase/firebase'; // Adjust the import path as necessary
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../firebase/firebase";
+import LoadingScreen from "../components/ui/LoadingScreen";
+import { seedDemoDataIfNeeded } from "../services/demoSeed";
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -16,10 +19,24 @@ export const AuthProvider = ({ children }) => {
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    seedDemoDataIfNeeded(user).catch((error) => {
+      console.error("Demo data seed failed:", error);
+    });
+  }, [user]);
+
   const logout = () => signOut(auth);
+
+  if (loading) {
+    return <LoadingScreen fullScreen label="Preparing your workspace..." />;
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading,logout }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user, loading, logout }}>
+      {children}
     </AuthContext.Provider>
   );
 };
