@@ -1,14 +1,12 @@
 import {
   doc,
-  getDoc,
   writeBatch,
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import demoSeed from "../data/demoSeed.json";
 
-const DEMO_EMAILS = new Set(["demo@gmail.com", "test@gmail.com"]);
-const SEED_META_DOC_ID = "demo-seed";
+const ALLOWED_DEMO_UIDS = new Set(["Wf3fvnABucXCDXm8wFylQHxDFBa2"]);
 
 const formatMonthKey = (date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
@@ -35,15 +33,8 @@ const slugify = (text) =>
     .replace(/^-+|-+$/g, "");
 
 export const seedDemoDataIfNeeded = async (user) => {
-  const normalizedEmail = user?.email?.toLowerCase()?.trim();
-  if (!user?.uid || !DEMO_EMAILS.has(normalizedEmail)) {
+  if (!user?.uid || !ALLOWED_DEMO_UIDS.has(user.uid)) {
     return { seeded: false, reason: "not-demo-user" };
-  }
-
-  const seedMetaRef = doc(db, `users/${user.uid}/meta/${SEED_META_DOC_ID}`);
-  const seedMetaSnap = await getDoc(seedMetaRef);
-  if (seedMetaSnap.exists()) {
-    return { seeded: false, reason: "already-seeded" };
   }
 
   const batch = writeBatch(db);
@@ -83,11 +74,17 @@ export const seedDemoDataIfNeeded = async (user) => {
     });
   });
 
-  batch.set(seedMetaRef, {
-    seededAt: serverTimestamp(),
-    source: "local-demo-seed",
-  });
-
   await batch.commit();
-  return { seeded: true, reason: "seeded" };
+  return { seeded: true, reason: "upserted" };
+};
+
+export const isAllowedDemoUser = (user) =>
+  Boolean(user?.uid && ALLOWED_DEMO_UIDS.has(user.uid));
+
+export const forceLoadDemoData = async (user) => {
+  if (!isAllowedDemoUser(user)) {
+    return { seeded: false, reason: "not-demo-user" };
+  }
+
+  return seedDemoDataIfNeeded(user);
 };

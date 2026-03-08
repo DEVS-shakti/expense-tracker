@@ -12,10 +12,12 @@ import {
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 import { getUserDisplayName, getUserInitials } from "../utils/user";
+import { forceLoadDemoData, isAllowedDemoUser } from "../services/demoSeed";
 
 const Profile = () => {
   const { user, logout } = useAuth();
   const [showPrefs, setShowPrefs] = useState(false);
+  const [seeding, setSeeding] = useState(false);
 
   const displayName = getUserDisplayName(user);
   const initials = getUserInitials(user);
@@ -49,6 +51,19 @@ const Profile = () => {
       await logout();
     } catch (error) {
       alert("Logout failed");
+    }
+  };
+
+  const handleLoadDemoData = async () => {
+    setSeeding(true);
+    try {
+      await forceLoadDemoData(user);
+      alert("Demo data loaded successfully.");
+    } catch (error) {
+      console.error("Demo data load error:", error);
+      alert("Failed to load demo data.");
+    } finally {
+      setSeeding(false);
     }
   };
 
@@ -123,6 +138,15 @@ const Profile = () => {
               >
                 <Bell className="w-4 h-4" /> Email Preferences
               </button>
+              {isAllowedDemoUser(user) && (
+                <button
+                  onClick={handleLoadDemoData}
+                  disabled={seeding}
+                  className="inline-flex items-center gap-2 bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition text-sm disabled:opacity-60"
+                >
+                  {seeding ? "Loading..." : "Load Demo Data"}
+                </button>
+              )}
             </div>
           </section>
         </div>
