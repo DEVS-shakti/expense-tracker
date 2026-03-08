@@ -1,7 +1,7 @@
 // src/pages/CategoriesPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { db } from "../firebase/db";
 import { useAuth } from "../context/AuthContext";
 
 const CategoriesPage = () => {
@@ -153,3 +153,4 @@ const CategoryPanel = ({ title, subtitle, tone, categories, onDelete }) => {
 };
 
 export default CategoriesPage;
+

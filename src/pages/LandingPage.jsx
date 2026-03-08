@@ -18,18 +18,6 @@ import {
   Github,
   BriefcaseBusiness,
 } from "lucide-react";
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  BarChart,
-  Bar,
-  Legend,
-} from "recharts";
 import { useAuth } from "../context/AuthContext";
 import heroImg from "../assets/finnance.svg";
 import work from "../assets/work.svg";
@@ -104,15 +92,6 @@ const demoHighlights = [
   "Monitor monthly income, expense, and net savings in one dashboard.",
   "Compare budget limits vs actual category spending visually.",
   "Manage category lists and keep records clean and organized.",
-];
-
-const trendData = [
-  { month: "Jan", income: 75000, expense: 52000 },
-  { month: "Feb", income: 72000, expense: 50000 },
-  { month: "Mar", income: 81000, expense: 56000 },
-  { month: "Apr", income: 79000, expense: 53000 },
-  { month: "May", income: 86000, expense: 57000 },
-  { month: "Jun", income: 90000, expense: 59000 },
 ];
 
 const budgetVsActualData = [
@@ -254,7 +233,14 @@ const Landing = () => {
           </div>
 
           <div className="bg-white border border-indigo-100 rounded-3xl shadow-xl p-5 sm:p-7">
-            <img src={heroImg} alt="Finance dashboard preview" className="w-full max-w-lg mx-auto" />
+            <img
+              src={heroImg}
+              alt="Finance dashboard preview"
+              className="w-full max-w-lg mx-auto"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
           </div>
         </div>
       </section>
@@ -314,18 +300,35 @@ const Landing = () => {
             <p className="text-sm text-slate-500 mb-4">
               Track monthly momentum and keep expense growth under control.
             </p>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={trendData}>
-                  <CartesianGrid strokeDasharray="4 4" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="income" stroke="#2563EB" strokeWidth={3} />
-                  <Line type="monotone" dataKey="expense" stroke="#F97316" strokeWidth={3} />
-                </LineChart>
-              </ResponsiveContainer>
+            <svg viewBox="0 0 440 220" className="w-full h-60 bg-slate-50 rounded-xl border border-slate-200">
+              <polyline
+                fill="none"
+                stroke="#2563EB"
+                strokeWidth="4"
+                points="20,150 90,160 160,120 230,130 300,95 370,80"
+              />
+              <polyline
+                fill="none"
+                stroke="#F97316"
+                strokeWidth="4"
+                points="20,175 90,180 160,155 230,165 300,145 370,140"
+              />
+              <text x="26" y="205" fontSize="12" fill="#64748b">Jan</text>
+              <text x="90" y="205" fontSize="12" fill="#64748b">Feb</text>
+              <text x="160" y="205" fontSize="12" fill="#64748b">Mar</text>
+              <text x="230" y="205" fontSize="12" fill="#64748b">Apr</text>
+              <text x="300" y="205" fontSize="12" fill="#64748b">May</text>
+              <text x="370" y="205" fontSize="12" fill="#64748b">Jun</text>
+              <circle cx="370" cy="80" r="4" fill="#2563EB" />
+              <circle cx="370" cy="140" r="4" fill="#F97316" />
+            </svg>
+            <div className="mt-3 flex items-center gap-4 text-xs text-slate-600">
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-600" /> Income
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-orange-500" /> Expense
+              </span>
             </div>
           </div>
 
@@ -337,18 +340,44 @@ const Landing = () => {
             <p className="text-sm text-slate-500 mb-4">
               Compare category budgets with actual spending to prevent overruns.
             </p>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={budgetVsActualData}>
-                  <CartesianGrid strokeDasharray="4 4" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="budget" fill="#22C55E" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="actual" fill="#EF4444" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+            <div className="space-y-4">
+              {budgetVsActualData.map((row) => {
+                const budgetPct = 100;
+                const actualPct = Math.min(
+                  100,
+                  Math.round((row.actual / row.budget) * 100),
+                );
+                return (
+                  <div key={row.name}>
+                    <div className="flex justify-between text-xs mb-1 text-slate-600">
+                      <span>{row.name}</span>
+                      <span>
+                        Budget: {row.budget} | Actual: {row.actual}
+                      </span>
+                    </div>
+                    <div className="h-2.5 rounded-full bg-slate-200 overflow-hidden">
+                      <div
+                        className="h-full bg-emerald-500"
+                        style={{ width: `${budgetPct}%` }}
+                      />
+                    </div>
+                    <div className="h-2.5 rounded-full bg-slate-200 overflow-hidden mt-1.5">
+                      <div
+                        className="h-full bg-rose-500"
+                        style={{ width: `${actualPct}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-3 flex items-center gap-4 text-xs text-slate-600">
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Budget
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Actual
+              </span>
             </div>
           </div>
         </div>
@@ -530,7 +559,13 @@ const AdvantageCard = ({ item }) => (
     <h4 className="text-lg font-semibold text-slate-900">{item.title}</h4>
     <p className="mt-2 text-sm text-slate-600">{item.description}</p>
     {item.image && (
-      <img src={item.image} alt={item.title} className="mt-4 w-full h-28 object-contain" />
+      <img
+        src={item.image}
+        alt={item.title}
+        className="mt-4 w-full h-28 object-contain"
+        loading="lazy"
+        decoding="async"
+      />
     )}
   </div>
 );

@@ -3,7 +3,7 @@ import {
   writeBatch,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { db } from "../firebase/db";
 import demoSeed from "../data/demoSeed.json";
 
 const ALLOWED_DEMO_UIDS = new Set(["Wf3fvnABucXCDXm8wFylQHxDFBa2"]);
@@ -88,3 +88,4 @@ export const forceLoadDemoData = async (user) => {
 
   return seedDemoDataIfNeeded(user);
 };
+

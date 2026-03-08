@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";
+import { auth } from "../firebase/auth";
+import { db } from "../firebase/db";
 import BudgetList from "../components/Budget/BudgetList";
 import BudgetForm from "../components/Budget/BudgetForm";
 import { Plus } from "lucide-react";
@@ -62,3 +63,4 @@ const BudgetingPage = () => {
 };
 
 export default BudgetingPage;
+

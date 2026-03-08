@@ -6,7 +6,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { MoveLeft } from "lucide-react";
-import { auth, provider } from "../../firebase/firebase";
+import { auth, provider } from "../../firebase/auth";
 import "./AuthForm.css";
 
 const RegisterForm = () => {
@@ -153,4 +153,5 @@ const RegisterForm = () => {
 };
 
 export default RegisterForm;
+
 

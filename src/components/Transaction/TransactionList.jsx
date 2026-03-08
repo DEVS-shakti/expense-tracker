@@ -8,7 +8,8 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db, auth } from "../../firebase/firebase";
+import { db } from "../../firebase/db";
+import { auth } from "../../firebase/auth";
 
 const TransactionList = () => {
   const [transactions, setTransactions] = useState([]);
@@ -199,3 +200,4 @@ const TransactionList = () => {
 };
 
 export default TransactionList;
+

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { MoveLeft } from "lucide-react";
-import { auth, provider } from "../../firebase/firebase";
+import { auth, provider } from "../../firebase/auth";
 import "./AuthForm.css";
 
 const LoginForm = () => {
@@ -111,4 +111,5 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
 

@@ -1,7 +1,7 @@
 // src/context/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+import { auth } from "../firebase/auth";
 import LoadingScreen from "../components/ui/LoadingScreen";
 
 const AuthContext = createContext();
@@ -33,3 +33,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+

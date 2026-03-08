@@ -10,7 +10,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+import { auth } from "../firebase/auth";
 import { getUserDisplayName, getUserInitials } from "../utils/user";
 import { forceLoadDemoData, isAllowedDemoUser } from "../services/demoSeed";
 
@@ -212,3 +212,4 @@ const InfoRow = ({ icon, label, value }) => (
 );
 
 export default Profile;
+

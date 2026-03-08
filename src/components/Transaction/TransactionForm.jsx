@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { addDoc, collection, serverTimestamp, getDocs } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
+import { db } from "../../firebase/db";
 import { useAuth } from "../../context/AuthContext";
 
 const TransactionForm = () => {
@@ -100,3 +100,4 @@ const TransactionForm = () => {
 };
 
 export default TransactionForm;
+

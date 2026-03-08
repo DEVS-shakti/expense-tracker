@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-import { db, auth } from "../firebase/firebase";
+import { db } from "../firebase/db";
+import { auth } from "../firebase/auth";
 import {
   PieChart,
   Pie,
@@ -269,3 +270,4 @@ const Insight = () => {
 };
 
 export default Insight;
+

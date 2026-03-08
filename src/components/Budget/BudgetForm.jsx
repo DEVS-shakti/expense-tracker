@@ -1,7 +1,8 @@
 // src/components/Budget/BudgetForm.jsx
 import React, { useState } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db, auth } from "../../firebase/firebase";
+import { db } from "../../firebase/db";
+import { auth } from "../../firebase/auth";
 
 const BudgetForm = ({ onClose, selectedMonth }) => {
   const [category, setCategory] = useState("");
@@ -63,3 +64,4 @@ const BudgetForm = ({ onClose, selectedMonth }) => {
 };
 
 export default BudgetForm;
+

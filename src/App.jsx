@@ -1,23 +1,21 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
-import LoginForm from "./components/Auth/LoginForm";
-import RegisterForm from "./components/Auth/RegisterForm";
-import Dashboard from "./pages/Dashboard";
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
-import Landing from "./pages/LandingPage";
-import Transactions from "./pages/Transaction";
-import Insights from "./pages/Insight";
-import Profile from "./pages/Profile";
-import DashboardLayout from "./layouts/DashboardLayout";
-import CategoriesPage from "./pages/CategoriesPage";
-import BudgetingPage from "./pages/BudgetingPage";
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeSwitcher from "./components/ThemeSwitcher";
+import LoadingScreen from "./components/ui/LoadingScreen";
+
+const Landing = lazy(() => import("./pages/LandingPage"));
+const LoginForm = lazy(() => import("./components/Auth/LoginForm"));
+const RegisterForm = lazy(() => import("./components/Auth/RegisterForm"));
+const DashboardLayout = lazy(() => import("./layouts/DashboardLayout"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Transactions = lazy(() => import("./pages/Transaction"));
+const Insights = lazy(() => import("./pages/Insight"));
+const Profile = lazy(() => import("./pages/Profile"));
+const CategoriesPage = lazy(() => import("./pages/CategoriesPage"));
+const BudgetingPage = lazy(() => import("./pages/BudgetingPage"));
 
 const App = () => {
   return (
@@ -25,68 +23,71 @@ const App = () => {
       <AuthProvider>
         <Router>
           <ThemeSwitcher />
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/register" element={<RegisterForm />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoutes>
-                  <DashboardLayout />
-                </ProtectedRoutes>
-              }
-            >
+          <Suspense fallback={<LoadingScreen fullScreen label="Loading page..." />}>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/register" element={<RegisterForm />} />
+
               <Route
-                path="categories"
+                path="/dashboard"
                 element={
                   <ProtectedRoutes>
-                    <CategoriesPage />
+                    <DashboardLayout />
                   </ProtectedRoutes>
                 }
-              />
-              <Route
-                index
-                element={
-                  <ProtectedRoutes>
-                    <Dashboard />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="transactions"
-                element={
-                  <ProtectedRoutes>
-                    <Transactions />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="insights"
-                element={
-                  <ProtectedRoutes>
-                    <Insights />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="budgets"
-                element={
-                  <ProtectedRoutes>
-                    <BudgetingPage />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="profile"
-                element={
-                  <ProtectedRoutes>
-                    <Profile />
-                  </ProtectedRoutes>
-                }
-              />
-            </Route>
-          </Routes>
+              >
+                <Route
+                  path="categories"
+                  element={
+                    <ProtectedRoutes>
+                      <CategoriesPage />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  index
+                  element={
+                    <ProtectedRoutes>
+                      <Dashboard />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="transactions"
+                  element={
+                    <ProtectedRoutes>
+                      <Transactions />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="insights"
+                  element={
+                    <ProtectedRoutes>
+                      <Insights />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="budgets"
+                  element={
+                    <ProtectedRoutes>
+                      <BudgetingPage />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="profile"
+                  element={
+                    <ProtectedRoutes>
+                      <Profile />
+                    </ProtectedRoutes>
+                  }
+                />
+              </Route>
+            </Routes>
+          </Suspense>
         </Router>
       </AuthProvider>
     </ThemeProvider>

@@ -31,7 +31,7 @@ import TransactionList from "../components/Transaction/TransactionList";
 import TransactionForm from "../components/Transaction/TransactionForm";
 import Insights from "./Insight";
 import { getUserDisplayName } from "../utils/user";
-import { db } from "../firebase/firebase";
+import { db } from "../firebase/db";
 import {
   collection,
   query,
@@ -198,3 +198,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
