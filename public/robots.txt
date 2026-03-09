@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dashboard
 Disallow: /dashboard/
 
-Sitemap: https://expense-tracker-bda1f.web.app/sitemap.xml
+Sitemap: https://expense-tracker-two-vert.vercel.app/sitemap.xml
