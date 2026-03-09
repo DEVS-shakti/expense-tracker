@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /dashboard/
+
+Sitemap: https://expense-tracker-bda1f.web.app/sitemap.xml
