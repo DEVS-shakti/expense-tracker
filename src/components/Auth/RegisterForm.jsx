@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import { MoveLeft } from "lucide-react";
 import { auth, provider } from "../../firebase/auth";
+import { getFriendlyAuthError } from "../../utils/authErrors";
 import "./AuthForm.css";
 
 const RegisterForm = () => {
@@ -66,7 +67,7 @@ const RegisterForm = () => {
       await signInWithPopup(auth, provider);
       navigate("/dashboard");
     } catch (firebaseError) {
-      setError("Google sign-up failed. Please try again.");
+      setError(getFriendlyAuthError(firebaseError, "Google sign-up failed. Please try again."));
       console.error("Google sign-up error:", firebaseError);
     } finally {
       setIsSubmitting(false);

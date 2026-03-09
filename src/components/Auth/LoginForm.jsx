@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { MoveLeft } from "lucide-react";
 import { auth, provider } from "../../firebase/auth";
+import { getFriendlyAuthError } from "../../utils/authErrors";
 import "./AuthForm.css";
 
 const LoginForm = () => {
@@ -38,7 +39,7 @@ const LoginForm = () => {
       await signInWithPopup(auth, provider);
       navigate("/dashboard");
     } catch (firebaseError) {
-      setError("Google sign-in failed. Please try again.");
+      setError(getFriendlyAuthError(firebaseError, "Google sign-in failed. Please try again."));
       console.error("Google sign-in error:", firebaseError);
     } finally {
       setIsSubmitting(false);
