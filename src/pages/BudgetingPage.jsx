@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
+import { Plus } from "lucide-react";
 import { auth } from "../firebase/auth";
 import { db } from "../firebase/db";
 import BudgetList from "../components/Budget/BudgetList";
 import BudgetForm from "../components/Budget/BudgetForm";
-import { Plus } from "lucide-react";
 
 const BudgetingPage = () => {
   const [selectedMonth, setSelectedMonth] = useState(() =>
@@ -12,11 +12,14 @@ const BudgetingPage = () => {
   );
   const [budgetLimits, setBudgetLimits] = useState({});
   const [showForm, setShowForm] = useState(false);
+  const [editingBudget, setEditingBudget] = useState(null);
+  const [deletingCategory, setDeletingCategory] = useState(null);
 
   useEffect(() => {
     const fetchBudgets = async () => {
       const user = auth.currentUser;
       if (!user) return;
+
       const docRef = doc(db, `users/${user.uid}/budgets/${selectedMonth}`);
       const snapshot = await getDoc(docRef);
       if (snapshot.exists()) {
@@ -25,42 +28,83 @@ const BudgetingPage = () => {
         setBudgetLimits({});
       }
     };
+
     fetchBudgets();
   }, [selectedMonth, showForm]);
 
+  const handleDeleteBudget = async (category) => {
+    const user = auth.currentUser;
+    if (!user || deletingCategory) return;
+    setDeletingCategory(category);
+
+    try {
+      const docRef = doc(db, `users/${user.uid}/budgets/${selectedMonth}`);
+      await updateDoc(docRef, {
+        [`categoryLimits.${category}`]: deleteField(),
+      });
+
+      setBudgetLimits((current) => {
+        const updated = { ...current };
+        delete updated[category];
+        return updated;
+      });
+    } finally {
+      setDeletingCategory(null);
+    }
+  };
+
+  const handleOpenCreate = () => {
+    setEditingBudget(null);
+    setShowForm(true);
+  };
+
+  const handleOpenEdit = (budget) => {
+    setEditingBudget(budget);
+    setShowForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setEditingBudget(null);
+  };
+
   return (
     <div>
-      <h1 className="text-3xl font-bold text-indigo-700 mb-4">📊 Monthly Budget</h1>
+      <h1 className="mb-4 text-3xl font-bold text-indigo-700">Monthly Budget</h1>
 
-      {/* Month Selector */}
       <div className="mb-4">
         <label className="mr-2 font-medium">Select Month:</label>
         <input
           type="month"
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
-          className="p-2 border rounded"
+          className="rounded border p-2"
         />
       </div>
 
-      {/* Budget List */}
-      <BudgetList budgetLimits={budgetLimits} />
+      <BudgetList
+        budgetLimits={budgetLimits}
+        onEdit={handleOpenEdit}
+        onDelete={handleDeleteBudget}
+        deletingCategory={deletingCategory}
+      />
 
-      {/* Floating Add Button */}
       <button
-        onClick={() => setShowForm(true)}
-        className="fixed bottom-6 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition z-50"
+        onClick={handleOpenCreate}
+        className="fixed bottom-6 right-6 z-50 rounded-full bg-indigo-600 p-4 text-white shadow-lg transition hover:bg-indigo-700"
       >
-        <Plus className="w-6 h-6" />
+        <Plus className="h-6 w-6" />
       </button>
 
-      {/* Modal */}
       {showForm && (
-        <BudgetForm selectedMonth={selectedMonth} onClose={() => setShowForm(false)} />
+        <BudgetForm
+          selectedMonth={selectedMonth}
+          initialBudget={editingBudget}
+          onClose={handleCloseForm}
+        />
       )}
     </div>
   );
 };
 
 export default BudgetingPage;
-

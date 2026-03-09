@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { addDoc, collection, serverTimestamp, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
 import { db } from "../../firebase/db";
 import { useAuth } from "../../context/AuthContext";
 
@@ -11,34 +17,45 @@ const TransactionForm = () => {
   const [categories, setCategories] = useState([]);
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
       const querySnapshot = await getDocs(collection(db, `users/${user.uid}/categories`));
       const fetched = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setCategories(fetched.filter((cat) => cat.type === type));
+      const filtered = fetched.filter((cat) => cat.type === type);
+      setCategories(filtered);
+      setCategory((current) =>
+        filtered.some((cat) => cat.name === current) ? current : ""
+      );
     };
     fetchCategories();
   }, [type, user.uid]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!amount || !category || !date) return;
+    if (!amount || !category || !date || isSubmitting) return;
 
-    await addDoc(collection(db, `users/${user.uid}/transactions`), {
-      amount: parseFloat(amount),
-      type,
-      category,
-      description,
-      date,
-      createdAt: serverTimestamp(),
-    });
+    setIsSubmitting(true);
 
-    setAmount(0);
-    setCategory("");
-    setDescription("");
-    setType("expense");
-    setDate(new Date().toISOString().split("T")[0]);
+    try {
+      await addDoc(collection(db, `users/${user.uid}/transactions`), {
+        amount: parseFloat(amount),
+        type,
+        category,
+        description,
+        date: Timestamp.fromDate(new Date(`${date}T00:00:00`)),
+        createdAt: serverTimestamp(),
+      });
+
+      setAmount(0);
+      setCategory("");
+      setDescription("");
+      setType("expense");
+      setDate(new Date().toISOString().split("T")[0]);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -92,8 +109,12 @@ const TransactionForm = () => {
         required
       />
 
-      <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-        Add Transaction
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="rounded bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {isSubmitting ? "Saving..." : "Add Transaction"}
       </button>
     </form>
   );

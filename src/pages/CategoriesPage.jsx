@@ -3,12 +3,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/db";
 import { useAuth } from "../context/AuthContext";
+import { Trash2 } from "lucide-react";
 
 const CategoriesPage = () => {
   const { user } = useAuth();
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
   const [type, setType] = useState("expense");
+  const [isAdding, setIsAdding] = useState(false);
+  const [deletingCategoryId, setDeletingCategoryId] = useState(null);
 
   const fetchCategories = async () => {
     const snapshot = await getDocs(collection(db, `users/${user.uid}/categories`));
@@ -17,7 +20,7 @@ const CategoriesPage = () => {
 
   const addCategory = async () => {
     const normalized = name.trim();
-    if (!normalized) return;
+    if (!normalized || isAdding) return;
 
     const exists = categories.some(
       (cat) =>
@@ -29,19 +32,30 @@ const CategoriesPage = () => {
       return;
     }
 
-    await addDoc(collection(db, `users/${user.uid}/categories`), {
-      name: normalized,
-      type,
-      createdAt: new Date(),
-    });
+    setIsAdding(true);
+    try {
+      await addDoc(collection(db, `users/${user.uid}/categories`), {
+        name: normalized,
+        type,
+        createdAt: new Date(),
+      });
 
-    setName("");
-    fetchCategories();
+      setName("");
+      fetchCategories();
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   const deleteCategory = async (id) => {
-    await deleteDoc(doc(db, `users/${user.uid}/categories/${id}`));
-    fetchCategories();
+    if (deletingCategoryId) return;
+    setDeletingCategoryId(id);
+    try {
+      await deleteDoc(doc(db, `users/${user.uid}/categories/${id}`));
+      fetchCategories();
+    } finally {
+      setDeletingCategoryId(null);
+    }
   };
 
   useEffect(() => {
@@ -83,9 +97,10 @@ const CategoriesPage = () => {
           </select>
           <button
             onClick={addCategory}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+            disabled={isAdding}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Add Category
+            {isAdding ? "Adding..." : "Add Category"}
           </button>
         </div>
       </div>
@@ -97,6 +112,7 @@ const CategoriesPage = () => {
           tone="expense"
           categories={expenseCategories}
           onDelete={deleteCategory}
+          deletingCategoryId={deletingCategoryId}
         />
         <CategoryPanel
           title="Income Categories"
@@ -104,13 +120,21 @@ const CategoriesPage = () => {
           tone="income"
           categories={incomeCategories}
           onDelete={deleteCategory}
+          deletingCategoryId={deletingCategoryId}
         />
       </div>
     </div>
   );
 };
 
-const CategoryPanel = ({ title, subtitle, tone, categories, onDelete }) => {
+const CategoryPanel = ({
+  title,
+  subtitle,
+  tone,
+  categories,
+  onDelete,
+  deletingCategoryId,
+}) => {
   const badgeClass =
     tone === "expense"
       ? "bg-rose-100 text-rose-700"
@@ -140,9 +164,11 @@ const CategoryPanel = ({ title, subtitle, tone, categories, onDelete }) => {
               </div>
               <button
                 onClick={() => onDelete(cat.id)}
-                className="text-sm text-red-600 hover:underline"
+                disabled={Boolean(deletingCategoryId)}
+                className="rounded-md p-2 text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label={`Delete category ${cat.name}`}
               >
-                Delete
+                <Trash2 className="h-4 w-4" />
               </button>
             </li>
           ))}

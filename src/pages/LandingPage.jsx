@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Menu,
@@ -25,47 +25,45 @@ import secure from "../assets/secure.svg";
 import visual from "../assets/visual.svg";
 import "../index.css";
 
-const DEMO_VIDEO_URL = "";
-
 const advantages = [
   {
     title: "Smart Visual Reports",
     description:
       "Understand where your money goes with clear charts and real-time summaries.",
-    icon: <LineChartIcon className="w-5 h-5" />,
+    icon: <LineChartIcon className="h-5 w-5" />,
     image: visual,
   },
   {
     title: "Secure by Design",
     description:
       "Authentication and private user storage keep your personal finance data protected.",
-    icon: <ShieldCheck className="w-5 h-5" />,
+    icon: <ShieldCheck className="h-5 w-5" />,
     image: secure,
   },
   {
     title: "Works on Every Device",
     description:
       "Track income and expenses smoothly from mobile, tablet, or desktop.",
-    icon: <Wallet className="w-5 h-5" />,
+    icon: <Wallet className="h-5 w-5" />,
     image: work,
   },
   {
     title: "Monthly Budget Control",
     description:
       "Set category limits and compare actual spending against targets.",
-    icon: <Goal className="w-5 h-5" />,
+    icon: <Goal className="h-5 w-5" />,
   },
   {
     title: "Practical Spending Insights",
     description:
       "Identify overspending patterns and improve savings with actionable metrics.",
-    icon: <TrendingUp className="w-5 h-5" />,
+    icon: <TrendingUp className="h-5 w-5" />,
   },
   {
     title: "Useful Reminders",
     description:
       "Stay consistent with your money habits using regular account nudges.",
-    icon: <BellRing className="w-5 h-5" />,
+    icon: <BellRing className="h-5 w-5" />,
   },
 ];
 
@@ -87,11 +85,34 @@ const practicalInsights = [
   },
 ];
 
-const demoHighlights = [
-  "Add transactions in seconds with category-based tracking.",
-  "Monitor monthly income, expense, and net savings in one dashboard.",
-  "Compare budget limits vs actual category spending visually.",
-  "Manage category lists and keep records clean and organized.",
+const demoClips = [
+  {
+    id: "categories",
+    title: "Create Categories",
+    eyebrow: "Setup flow",
+    description:
+      "Add income and expense categories first so the rest of the app stays structured.",
+    src: "/demo/categoryview.mp4",
+    length: "0:23",
+  },
+  {
+    id: "budgets",
+    title: "Plan Monthly Budgets",
+    eyebrow: "Control spending",
+    description:
+      "Choose an existing category, set a limit, then edit or remove it in place.",
+    src: "/demo/budgetview.mp4",
+    length: "0:21",
+  },
+  {
+    id: "transactions",
+    title: "Add Transactions",
+    eyebrow: "Daily usage",
+    description:
+      "Capture income and expenses with date, description, and category tracking.",
+    src: "/demo/transactionview.mp4",
+    length: "0:31",
+  },
 ];
 
 const budgetVsActualData = [
@@ -105,9 +126,26 @@ const Landing = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [demoOpen, setDemoOpen] = useState(false);
+  const demoSectionRef = useRef(null);
 
   const ctaLabel = useMemo(() => (user ? "Go to Dashboard" : "Get Started"), [user]);
+
+  useEffect(() => {
+    const nodes = document.querySelectorAll(".reveal-on-scroll");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
 
   const handleStart = () => {
     if (user) navigate("/dashboard");
@@ -115,39 +153,41 @@ const Landing = () => {
   };
 
   const handleOpenDemo = () => {
-    setDemoOpen(true);
+    demoSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setMenuOpen(false);
   };
 
   return (
-    <div className="overflow-x-hidden min-h-screen bg-slate-50 text-slate-800">
-      <header className="px-4 sm:px-6 py-4 bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl sm:text-2xl font-bold text-indigo-700">ExpenseTrack</h1>
+    <div className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-800">
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 px-4 py-4 backdrop-blur sm:px-6">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <h1 className="text-xl font-bold text-indigo-700 sm:text-2xl">ExpenseTrack</h1>
 
           <button
-            className="md:hidden text-slate-700"
+            className="text-slate-700 md:hidden"
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-label="Toggle navigation menu"
           >
             {menuOpen ? <X /> : <Menu />}
           </button>
 
-          <nav className="hidden md:flex items-center gap-2 lg:gap-3">
-            <a href="#advantages" className="px-3 py-2 text-sm rounded-lg hover:bg-slate-100">
+          <nav className="hidden items-center gap-2 md:flex lg:gap-3">
+          
+            <a href="#advantages" className="rounded-lg px-3 py-2 text-sm hover:bg-slate-100">
               Advantages
             </a>
-            <a href="#insights" className="px-3 py-2 text-sm rounded-lg hover:bg-slate-100">
-              Practical Insights
+            <a href="#insights" className="rounded-lg px-3 py-2 text-sm hover:bg-slate-100">
+              Insights
             </a>
             <button
               onClick={handleOpenDemo}
-              className="px-4 py-2 text-sm rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+              className="rounded-lg border border-indigo-200 px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-50"
             >
               View Demo
             </button>
             <button
               onClick={handleStart}
-              className="px-4 py-2 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white hover:bg-indigo-700"
             >
               {ctaLabel}
             </button>
@@ -155,27 +195,25 @@ const Landing = () => {
         </div>
 
         {menuOpen && (
-          <div className="md:hidden max-w-7xl mx-auto mt-4 border-t border-slate-200 pt-4 space-y-2">
+          <div className="mx-auto mt-4 max-w-7xl space-y-2 border-t border-slate-200 pt-4 md:hidden">
+            
             <a
               href="#advantages"
-              className="block px-3 py-2 rounded-lg bg-white hover:bg-slate-100"
+              className="block rounded-lg bg-white px-3 py-2 hover:bg-slate-100"
               onClick={() => setMenuOpen(false)}
             >
               Advantages
             </a>
             <a
               href="#insights"
-              className="block px-3 py-2 rounded-lg bg-white hover:bg-slate-100"
+              className="block rounded-lg bg-white px-3 py-2 hover:bg-slate-100"
               onClick={() => setMenuOpen(false)}
             >
               Practical Insights
             </a>
             <button
-              onClick={() => {
-                setMenuOpen(false);
-                handleOpenDemo();
-              }}
-              className="w-full px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+              onClick={handleOpenDemo}
+              className="w-full rounded-lg border border-indigo-200 px-4 py-2 text-indigo-700 hover:bg-indigo-50"
             >
               View Demo
             </button>
@@ -184,7 +222,7 @@ const Landing = () => {
                 setMenuOpen(false);
                 handleStart();
               }}
-              className="w-full px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+              className="w-full rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
             >
               {ctaLabel}
             </button>
@@ -192,68 +230,188 @@ const Landing = () => {
         )}
       </header>
 
-      <section className="px-4 sm:px-6 pt-12 pb-14 bg-gradient-to-br from-indigo-100 via-sky-50 to-white">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 bg-white border border-indigo-100 rounded-full px-3 py-1 text-xs text-indigo-700 font-semibold mb-4">
-              <Sparkles className="w-3.5 h-3.5" /> Money clarity for everyday life
+      <section className="bg-[radial-gradient(circle_at_top_left,_rgba(99,102,241,0.18),_transparent_28%),linear-gradient(135deg,_#eef2ff_0%,_#f8fafc_42%,_#ffffff_100%)] px-4 pb-20 pt-12 sm:px-6">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2">
+          <div className="reveal-on-scroll">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-3 py-1 text-xs font-semibold text-indigo-700">
+              <Sparkles className="h-3.5 w-3.5" /> Money clarity for everyday life
             </div>
-            <h2 className="text-4xl sm:text-5xl font-bold leading-tight text-slate-900">
+            <h2 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl">
               Track smarter.
               <br />
               Spend better.
               <br />
               Save with confidence.
             </h2>
-            <p className="mt-5 text-slate-600 text-base sm:text-lg max-w-xl">
+            <p className="mt-5 max-w-xl text-base text-slate-600 sm:text-lg">
               ExpenseTrack helps you organize transactions, control category budgets,
               and understand monthly trends without complexity.
             </p>
 
-            <div className="mt-7 flex flex-col sm:flex-row gap-3">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <button
                 onClick={handleStart}
-                className="px-6 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 font-semibold"
+                className="rounded-xl bg-indigo-600 px-6 py-3 font-semibold text-white hover:bg-indigo-700"
               >
                 {ctaLabel}
               </button>
               <button
                 onClick={handleOpenDemo}
-                className="px-6 py-3 rounded-xl bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50 font-semibold inline-flex items-center justify-center gap-2"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-200 bg-white px-6 py-3 font-semibold text-indigo-700 hover:bg-indigo-50"
               >
-                <PlayCircle className="w-5 h-5" /> View Demo
+                <PlayCircle className="h-5 w-5" /> View Demo
               </button>
             </div>
 
-            <div className="mt-7 grid grid-cols-3 gap-3 max-w-lg">
+            <div className="mt-7 grid max-w-lg grid-cols-3 gap-3">
               <MetricCard title="10s" subtitle="Quick entry" />
-              <MetricCard title="360deg" subtitle="Spending view" />
+              <MetricCard title="3 clips" subtitle="Core flow" />
               <MetricCard title="24/7" subtitle="Any device" />
             </div>
           </div>
 
-          <div className="bg-white border border-indigo-100 rounded-3xl shadow-xl p-5 sm:p-7">
-            <img
-              src={heroImg}
-              alt="Finance dashboard preview"
-              className="w-full max-w-lg mx-auto"
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-            />
+          <div className="reveal-on-scroll relative">
+            <div className="absolute -left-4 top-10 hidden h-28 w-28 rounded-full bg-sky-200/50 blur-3xl sm:block" />
+            <div className="absolute -right-2 bottom-4 hidden h-32 w-32 rounded-full bg-indigo-200/60 blur-3xl sm:block" />
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 p-5 shadow-[0_30px_80px_rgba(15,23,42,0.16)] backdrop-blur">
+              <img
+                src={heroImg}
+                alt="ExpenseTrack dashboard preview"
+                className="mx-auto w-full max-w-lg"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="advantages" className="px-4 sm:px-6 py-14 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <h3 className="text-3xl sm:text-4xl font-bold text-slate-900">Why people choose ExpenseTrack</h3>
-          <p className="mt-3 text-slate-600 max-w-3xl">
-            Built to solve daily money-management problems with fast input, practical analytics,
-            and better spending discipline.
-          </p>
+      <section
+        id="demo"
+        ref={demoSectionRef}
+        className="relative overflow-hidden bg-slate-950 px-4 py-16 text-white sm:px-6"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.22),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(99,102,241,0.26),_transparent_25%)]" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="reveal-on-scroll max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-sky-300">
+              Product Demo
+            </p>
+            <h3 className="mt-3 text-3xl font-bold sm:text-4xl">
+              Real app flows, shown directly in the page.
+            </h3>
+            <p className="mt-4 text-base text-slate-300 sm:text-lg">
+              Start with the dashboard, then move through categories, budgets, and
+              transactions. The clips are embedded into the layout so the section feels
+              like part of the product story, not a detached popup.
+            </p>
+          </div>
 
-          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="mt-10 grid gap-8 lg:grid-cols-[0.92fr_1.08fr]">
+            <div className="reveal-on-scroll flex flex-col justify-between rounded-[2rem] border border-white/10 bg-white/10 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.32)] backdrop-blur">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">
+                  Overview Snapshot
+                </p>
+                <h4 className="mt-3 text-2xl font-semibold">Start with the dashboard, then follow the daily flow.</h4>
+                <p className="mt-4 text-sm text-slate-300 sm:text-base">
+                  The demo section focuses on the three actions that matter most in real use:
+                  create categories, define budgets from those categories, and log transactions that
+                  update your reports.
+                </p>
+              </div>
+
+              <div className="mt-8 space-y-5">
+                <div>
+                  <p className="mb-2 pl-1 text-xs font-medium tracking-[0.18em] text-slate-400">
+                    LIGHT MODE
+                  </p>
+                  <div className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-slate-900/70 p-3">
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-[1.15rem] bg-slate-950">
+                      <img
+                        src="/demo/dashboardimg.png"
+                        alt="ExpenseTrack dashboard screenshot"
+                        className="h-full w-full object-cover object-top"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/55 to-transparent" />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 pl-1 text-xs font-medium tracking-[0.18em] text-slate-400">
+                    DARK MODE
+                  </p>
+                  <div className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-slate-900/70 p-3">
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-[1.15rem] bg-slate-950">
+                      <img
+                        src="/demo/darkdash.png"
+                        alt="ExpenseTrack dark dashboard screenshot"
+                        className="h-full w-full object-cover object-top"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/60 to-transparent" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="overflow-hidden rounded-[1.6rem] border border-white/10 bg-slate-900/70 p-4">
+                  <div className="mb-3">
+                    <p className="text-xs font-medium tracking-[0.18em] text-slate-400">
+                      PROFILE
+                    </p>
+                    <p className="mt-1 text-sm text-slate-300">
+                      Manage account details, check sign-in information, and handle
+                      profile actions from one clean settings view.
+                    </p>
+                  </div>
+                  <div className="relative aspect-[16/10] overflow-hidden rounded-[1.15rem] bg-slate-950">
+                    <img
+                      src="/demo/profile.png"
+                      alt="ExpenseTrack profile screenshot"
+                      className="h-full w-full object-cover object-top"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/60 to-transparent" />
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={handleStart}
+                className="mt-6 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-slate-100"
+              >
+                {user ? "Open Dashboard" : "Try It Now"}
+              </button>
+            </div>
+
+            <div className="grid gap-5">
+              {demoClips.map((clip, index) => (
+                <DemoClipCard key={clip.id} clip={clip} index={index} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="advantages" className="bg-slate-50 px-4 py-14 sm:px-6">
+        <div className="mx-auto max-w-7xl">
+          <div className="reveal-on-scroll">
+            <h3 className="text-3xl font-bold text-slate-900 sm:text-4xl">
+              Why people choose ExpenseTrack
+            </h3>
+            <p className="mt-3 max-w-3xl text-slate-600">
+              Built to solve daily money-management problems with fast input, practical
+              analytics, and better spending discipline.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {advantages.map((item) => (
               <AdvantageCard key={item.title} item={item} />
             ))}
@@ -261,17 +419,17 @@ const Landing = () => {
         </div>
       </section>
 
-      <section id="insights" className="px-4 sm:px-6 py-14 bg-white">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 items-start">
-          <div className="bg-slate-900 text-slate-100 rounded-2xl p-6 sm:p-8">
-            <h3 className="text-2xl sm:text-3xl font-bold">Practical insights you can use today</h3>
+      <section id="insights" className="bg-white px-4 py-14 sm:px-6">
+        <div className="mx-auto grid max-w-7xl items-start gap-8 lg:grid-cols-2">
+          <div className="reveal-on-scroll rounded-2xl bg-slate-900 p-6 text-slate-100 sm:p-8">
+            <h3 className="text-2xl font-bold sm:text-3xl">Practical insights you can use today</h3>
             <p className="mt-3 text-slate-300">
               This is not just a tracker. It gives decision-ready context to improve your monthly outcomes.
             </p>
             <div className="mt-6 space-y-4">
               {practicalInsights.map((item) => (
                 <div key={item.heading} className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 mt-0.5 text-emerald-400" />
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-400" />
                   <div>
                     <p className="font-semibold">{item.heading}</p>
                     <p className="text-sm text-slate-300">{item.detail}</p>
@@ -281,7 +439,7 @@ const Landing = () => {
             </div>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8">
+          <div className="reveal-on-scroll rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
             <h4 className="text-xl font-semibold text-slate-900">How ExpenseTrack works</h4>
             <div className="mt-5 space-y-4">
               <Step number="1" title="Add income and expenses" body="Capture daily transactions quickly with categories." />
@@ -291,16 +449,16 @@ const Landing = () => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto mt-8 grid lg:grid-cols-2 gap-6">
-          <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-sm">
-            <div className="flex items-center gap-2 mb-3">
-              <TrendingUp className="w-5 h-5 text-indigo-600" />
+        <div className="mx-auto mt-8 grid max-w-7xl gap-6 lg:grid-cols-2">
+          <div className="reveal-on-scroll rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+            <div className="mb-3 flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-indigo-600" />
               <h5 className="text-lg font-semibold text-slate-900">Income vs Expense Trend</h5>
             </div>
-            <p className="text-sm text-slate-500 mb-4">
+            <p className="mb-4 text-sm text-slate-500">
               Track monthly momentum and keep expense growth under control.
             </p>
-            <svg viewBox="0 0 440 220" className="w-full h-60 bg-slate-50 rounded-xl border border-slate-200">
+            <svg viewBox="0 0 440 220" className="h-60 w-full rounded-xl border border-slate-200 bg-slate-50">
               <polyline
                 fill="none"
                 stroke="#2563EB"
@@ -324,48 +482,38 @@ const Landing = () => {
             </svg>
             <div className="mt-3 flex items-center gap-4 text-xs text-slate-600">
               <span className="inline-flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-600" /> Income
+                <span className="h-2.5 w-2.5 rounded-full bg-blue-600" /> Income
               </span>
               <span className="inline-flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-orange-500" /> Expense
+                <span className="h-2.5 w-2.5 rounded-full bg-orange-500" /> Expense
               </span>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-sm">
-            <div className="flex items-center gap-2 mb-3">
-              <CalendarCheck className="w-5 h-5 text-emerald-600" />
-              <h5 className="text-lg font-semibold text-slate-900">Budget vs Actual (Practical)</h5>
+          <div className="reveal-on-scroll rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+            <div className="mb-3 flex items-center gap-2">
+              <CalendarCheck className="h-5 w-5 text-emerald-600" />
+              <h5 className="text-lg font-semibold text-slate-900">Budget vs Actual</h5>
             </div>
-            <p className="text-sm text-slate-500 mb-4">
+            <p className="mb-4 text-sm text-slate-500">
               Compare category budgets with actual spending to prevent overruns.
             </p>
             <div className="space-y-4">
               {budgetVsActualData.map((row) => {
-                const budgetPct = 100;
-                const actualPct = Math.min(
-                  100,
-                  Math.round((row.actual / row.budget) * 100),
-                );
+                const actualPct = Math.min(100, Math.round((row.actual / row.budget) * 100));
                 return (
                   <div key={row.name}>
-                    <div className="flex justify-between text-xs mb-1 text-slate-600">
+                    <div className="mb-1 flex justify-between text-xs text-slate-600">
                       <span>{row.name}</span>
                       <span>
                         Budget: {row.budget} | Actual: {row.actual}
                       </span>
                     </div>
-                    <div className="h-2.5 rounded-full bg-slate-200 overflow-hidden">
-                      <div
-                        className="h-full bg-emerald-500"
-                        style={{ width: `${budgetPct}%` }}
-                      />
+                    <div className="h-2.5 overflow-hidden rounded-full bg-slate-200">
+                      <div className="h-full w-full bg-emerald-500" />
                     </div>
-                    <div className="h-2.5 rounded-full bg-slate-200 overflow-hidden mt-1.5">
-                      <div
-                        className="h-full bg-rose-500"
-                        style={{ width: `${actualPct}%` }}
-                      />
+                    <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-slate-200">
+                      <div className="h-full bg-rose-500" style={{ width: `${actualPct}%` }} />
                     </div>
                   </div>
                 );
@@ -373,37 +521,35 @@ const Landing = () => {
             </div>
             <div className="mt-3 flex items-center gap-4 text-xs text-slate-600">
               <span className="inline-flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Budget
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Budget
               </span>
               <span className="inline-flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Actual
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-500" /> Actual
               </span>
             </div>
           </div>
         </div>
       </section>
 
-      <footer className="bg-slate-100 text-slate-700 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <footer className="border-t border-slate-200 bg-slate-100 text-slate-700">
+        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
           <div>
             <p className="font-semibold text-slate-900">ExpenseTrack</p>
-            <p className="text-sm mt-2 text-slate-600">
+            <p className="mt-2 text-sm text-slate-600">
               Smart expense tracking with practical budgeting insights.
             </p>
           </div>
           <div>
             <p className="font-semibold text-slate-900">Explore</p>
-            <div className="mt-2 flex flex-col text-sm gap-1">
+            <div className="mt-2 flex flex-col gap-1 text-sm">
+              <a href="#demo" className="hover:text-indigo-700">Demo</a>
               <a href="#advantages" className="hover:text-indigo-700">Advantages</a>
               <a href="#insights" className="hover:text-indigo-700">Insights</a>
-              <button onClick={handleOpenDemo} className="text-left hover:text-indigo-700">
-                View Demo
-              </button>
             </div>
           </div>
           <div>
             <p className="font-semibold text-slate-900">Account</p>
-            <div className="mt-2 flex flex-col text-sm gap-1">
+            <div className="mt-2 flex flex-col gap-1 text-sm">
               <button onClick={() => navigate("/login")} className="text-left hover:text-indigo-700">
                 Login
               </button>
@@ -414,14 +560,14 @@ const Landing = () => {
           </div>
           <div>
             <p className="font-semibold text-slate-900">Social</p>
-            <div className="mt-2 text-sm text-slate-600 space-y-1">
+            <div className="mt-2 space-y-1 text-sm text-slate-600">
               <a
                 href="https://www.instagram.com/dev_sahu_785/"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 hover:text-pink-600"
               >
-                <Instagram className="w-4 h-4" /> dev_sahu_785
+                <Instagram className="h-4 w-4" /> dev_sahu_785
               </a>
               <br />
               <a
@@ -430,7 +576,7 @@ const Landing = () => {
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 hover:text-pink-600"
               >
-                <Instagram className="w-4 h-4" /> saktey_785
+                <Instagram className="h-4 w-4" /> saktey_785
               </a>
               <br />
               <a
@@ -439,7 +585,7 @@ const Landing = () => {
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 hover:text-indigo-700"
               >
-                <BriefcaseBusiness className="w-4 h-4" />
+                <BriefcaseBusiness className="h-4 w-4" />
                 Portfolio: shakti2024.netlify.app
               </a>
               <br />
@@ -449,111 +595,64 @@ const Landing = () => {
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 hover:text-indigo-700"
               >
-                <Github className="w-4 h-4" />
+                <Github className="h-4 w-4" />
                 GitHub: github.com/DEVS-shakti
               </a>
             </div>
           </div>
         </div>
-        <div className="border-t border-slate-200 px-4 sm:px-6 py-4 text-center text-sm text-slate-600">
+        <div className="border-t border-slate-200 px-4 py-4 text-center text-sm text-slate-600 sm:px-6">
           <p className="inline-flex items-center gap-2">
             Developed by Shakti with Codex
-            <Atom className="w-4 h-4 text-sky-600" />
+            <Atom className="h-4 w-4 text-sky-600" />
           </p>
         </div>
       </footer>
-
-      {demoOpen && (
-        <div className="fixed inset-0 bg-black/60 z-[70] flex items-center justify-center p-4">
-          <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
-            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-200">
-              <div>
-                <h4 className="text-lg sm:text-xl font-semibold text-slate-900">Product Demo</h4>
-                <p className="text-sm text-slate-500">See how ExpenseTrack helps you manage money end-to-end.</p>
-              </div>
-              <button onClick={() => setDemoOpen(false)} className="text-slate-500 hover:text-slate-800" aria-label="Close demo">
-                <X />
-              </button>
-            </div>
-
-            {DEMO_VIDEO_URL ? (
-              <div className="aspect-video bg-black">
-                <iframe
-                  title="ExpenseTrack demo video"
-                  src={DEMO_VIDEO_URL}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            ) : (
-              <div className="p-5 sm:p-6 grid md:grid-cols-2 gap-6">
-                <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
-                  <p className="text-sm font-semibold text-indigo-700">Demo Preview</p>
-                  <p className="mt-2 text-sm text-slate-600">
-                    Add your product walkthrough video by setting `DEMO_VIDEO_URL` in
-                    `LandingPage.jsx`. Until then, this guided summary explains key flows.
-                  </p>
-                  <div className="mt-4 rounded-lg bg-white border border-slate-200 p-4">
-                    <p className="text-sm text-slate-700">Suggested video sections:</p>
-                    <ol className="mt-2 space-y-1 text-sm text-slate-600 list-decimal list-inside">
-                      <li>Quick transaction entry and categories</li>
-                      <li>Monthly budgets and variance check</li>
-                      <li>Insights dashboard and practical actions</li>
-                    </ol>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Feature Highlights</p>
-                  <ul className="mt-3 space-y-2">
-                    {demoHighlights.map((item) => (
-                      <li key={item} className="flex items-start gap-2 text-sm text-slate-700">
-                        <TrendingUp className="w-4 h-4 mt-0.5 text-indigo-600" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-5 flex gap-3">
-                    <button
-                      onClick={() => {
-                        setDemoOpen(false);
-                        navigate("/register");
-                      }}
-                      className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
-                    >
-                      Try It Now
-                    </button>
-                    <button
-                      onClick={() => {
-                        setDemoOpen(false);
-                        handleStart();
-                      }}
-                      className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100"
-                    >
-                      Open App
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
 const MetricCard = ({ title, subtitle }) => (
-  <div className="bg-white border border-slate-200 rounded-xl p-3 text-center">
+  <div className="rounded-xl border border-slate-200 bg-white p-3 text-center">
     <p className="text-lg font-bold text-slate-900">{title}</p>
     <p className="text-xs text-slate-500">{subtitle}</p>
   </div>
 );
 
+const DemoClipCard = ({ clip, index }) => (
+  <article
+    className="reveal-on-scroll overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/5 p-3 text-white shadow-[0_16px_40px_rgba(15,23,42,0.22)] backdrop-blur"
+    style={{ transitionDelay: `${index * 90}ms` }}
+  >
+    <div className="overflow-hidden rounded-[1.25rem] border border-white/10 bg-black">
+      <video
+        className="aspect-video w-full object-cover"
+        src={clip.src}
+        muted
+        autoPlay
+        loop
+        playsInline
+        preload="metadata"
+      />
+    </div>
+    <div className="mt-4 flex items-center justify-between gap-3">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">
+          {clip.eyebrow}
+        </p>
+        <h4 className="mt-2 text-lg font-semibold">{clip.title}</h4>
+      </div>
+      <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-slate-200">
+        {clip.length}
+      </span>
+    </div>
+    <p className="mt-2 text-sm text-slate-300">{clip.description}</p>
+  </article>
+);
+
 const AdvantageCard = ({ item }) => (
-  <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
-    <div className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center mb-3">
+  <div className="reveal-on-scroll rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+    <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700">
       {item.icon}
     </div>
     <h4 className="text-lg font-semibold text-slate-900">{item.title}</h4>
@@ -562,7 +661,7 @@ const AdvantageCard = ({ item }) => (
       <img
         src={item.image}
         alt={item.title}
-        className="mt-4 w-full h-28 object-contain"
+        className="mt-4 h-28 w-full object-contain"
         loading="lazy"
         decoding="async"
       />
@@ -572,7 +671,7 @@ const AdvantageCard = ({ item }) => (
 
 const Step = ({ number, title, body }) => (
   <div className="flex gap-3">
-    <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 text-sm font-bold flex items-center justify-center shrink-0">
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700">
       {number}
     </div>
     <div>
