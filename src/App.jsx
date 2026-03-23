@@ -5,6 +5,8 @@ import ProtectedRoutes from "./routes/ProtectedRoutes";
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import LoadingScreen from "./components/ui/LoadingScreen";
+import ConfigErrorScreen from "./components/ui/ConfigErrorScreen";
+import { firebaseConfigError } from "./firebase/app";
 
 const Landing = lazy(() => import("./pages/LandingPage"));
 const LoginForm = lazy(() => import("./components/Auth/LoginForm"));
@@ -18,6 +20,15 @@ const CategoriesPage = lazy(() => import("./pages/CategoriesPage"));
 const BudgetingPage = lazy(() => import("./pages/BudgetingPage"));
 
 const App = () => {
+  if (firebaseConfigError) {
+    return (
+      <ThemeProvider>
+        <ThemeSwitcher />
+        <ConfigErrorScreen message={firebaseConfigError} />
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
       <AuthProvider>

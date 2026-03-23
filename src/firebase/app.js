@@ -14,11 +14,11 @@ const missingKeys = Object.entries(firebaseConfig)
   .filter(([, value]) => !value)
   .map(([key]) => key);
 
-if (missingKeys.length > 0) {
-  throw new Error(
-    `Missing Firebase environment variables: ${missingKeys.join(", ")}. ` +
-      "Create a .env file (see .env.example).",
-  );
-}
+export const firebaseConfigError =
+  missingKeys.length > 0
+    ? `Missing Firebase environment variables: ${missingKeys.join(", ")}. Create a .env file (see .env.example).`
+    : null;
 
-export const firebaseApp = initializeApp(firebaseConfig);
+export const firebaseApp = firebaseConfigError
+  ? null
+  : initializeApp(firebaseConfig);
