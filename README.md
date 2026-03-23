@@ -1,82 +1,147 @@
-# 💸 Expense Tracker App
+# Expense Tracker
 
-A powerful and modern personal finance manager built with **React**, **Firebase**, and **Tailwind CSS**. Track income, expenses, budgets, and get actionable insights via interactive visualizations.
+A modern personal finance tracker built with React, Firebase, and Tailwind CSS. Track income and expenses, manage budgets by month, and explore insights with interactive charts.
 
----
+## Table of Contents
 
+- Overview
+- Features
+- Screens and Routes
+- Tech Stack
+- Getting Started
+- Firebase Setup
+- Data Model
+- Scripts
+- Project Structure
+- Deployment
+- License
 
----
+## Overview
 
-## 👥 For Users
+Expense Tracker (ExpenseTrack) is a single-page React application with Firebase Authentication and Firestore persistence. It focuses on quick transaction entry, category management, monthly budgets, and clean visual insights.
 
-### ✅ Key Features
-- 🔐 **Secure Authentication** (Login/Register)
-- 💼 **Track Transactions** (Income & Expenses)
-- 📆 **Monthly Filters** for organizing data
-- 📊 **Smart Insights** via charts & analytics
-- 💸 **Budget Planner** per category/month
-- 👤 **Profile Settings** (password reset, email prefs)
+## Features
 
-### 📱 Mobile-First Responsive Design
-Optimized for all screen sizes including phones, tablets, and desktops.
+- Email and password authentication
+- Google sign-in via Firebase Auth
+- Dashboard with month selector and summaries
+- Transaction list and quick add modal
+- Category management for income and expense
+- Monthly budgets per category
+- Insights with category breakdowns, trends, and budget vs actual
+- Profile view with password reset
+- Theme switcher (light, dark, system)
+- Responsive layout with a collapsible sidebar
 
----
+## Screens and Routes
 
-## 👨‍💻 For Developers
+- `/` Landing page
+- `/login` Login
+- `/register` Register
+- `/dashboard` Dashboard overview
+- `/dashboard/transactions` Transactions
+- `/dashboard/categories` Categories
+- `/dashboard/budgets` Budgets
+- `/dashboard/insights` Insights
+- `/dashboard/profile` Profile
 
-### ⚙️ Tech Stack
+## Tech Stack
 
-| Frontend       | Backend         |
-|----------------|------------------|
-| React (Vite)   | Firebase Firestore |
-| Tailwind CSS   | Firebase Auth     |
-| Recharts       | Firebase Hosting  |
-| Lucide Icons   | (Optional) Cloud Functions |
+| Layer | Tech |
+| --- | --- |
+| UI | React 19, React Router 7, Tailwind CSS |
+| Charts | Recharts |
+| Auth | Firebase Authentication |
+| Data | Firebase Firestore |
+| Tooling | Vite, ESLint, Prettier |
 
----
+## Getting Started
 
-### 📦 Installation Steps
+Prerequisites
+
+- Node.js 18+ (recommended)
+- A Firebase project with Auth and Firestore enabled
+
+Install and run
 
 ```bash
 git clone https://github.com/DEVS-shakti/expense-tracker.git
 cd expense-tracker
-npm install 
- ```
-
-### Configure Your Firebase Project
-```
-// src/firebase/firebase.js
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-app.firebaseapp.com",
-  projectId: "your-app-id",
-  ...
-};
-```
-
-### Run App
-
-```
+npm install
 npm run dev
 ```
 
-### Project Structure
+The app runs at `http://localhost:5173` by default.
 
-```
+## Firebase Setup
+
+1. Create a Firebase project.
+2. Enable Authentication providers.
+3. Enable Firestore (production or test rules as needed).
+4. Replace the Firebase config in `src/firebase/app.js` with your project values.
+5. Optional: add your local domain to Firebase Auth authorized domains.
+
+Enabled auth flows used by the app
+
+- Email and password
+- Google sign-in
+
+## Data Model
+
+Firestore collections used by the app
+
+- `users/{uid}/transactions`
+- `users/{uid}/categories`
+- `users/{uid}/budgets/{yyyy-mm}`
+
+Typical transaction fields
+
+- `amount` (number)
+- `type` (income or expense)
+- `category` (string)
+- `description` (string)
+- `date` (Date or Firestore Timestamp)
+
+## Scripts
+
+- `npm run dev` Start the Vite dev server
+- `npm run build` Build for production
+- `npm run preview` Preview the production build
+- `npm run lint` Run ESLint
+
+## Project Structure
+
+```text
 src/
-├── components/
-│   └── Transaction/
-│   └── Budget/
-├── context/
-│   └── AuthContext.jsx
-├── pages/
-│   └── Dashboard.jsx
-│   └── Profile.jsx
-│   └── Insight.jsx
-│   └── BudgetingPage.jsx
-├── firebase/
-│   └── firebase.js
-└── App.jsx, main.jsx
+assets/
+components/
+  Auth/
+  Budget/
+  Transaction/
+  ui/
+  utils/
+context/
+firebase/
+layouts/
+pages/
+routes/
+services/
+utils/
+App.jsx
+main.jsx
+index.css
 ```
 
+## Deployment
 
+Build the app and deploy the `dist/` folder to your hosting provider.
+
+```bash
+npm run build
+```
+
+You can also use `npm run preview` locally to validate the production build.
+
+## License
+
+MIT. See `LICENSE`.
