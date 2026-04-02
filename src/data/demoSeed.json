@@ -5,6 +5,7 @@
     { "name": "Rent", "type": "expense" },
     { "name": "Utilities", "type": "expense" },
     { "name": "Entertainment", "type": "expense" },
+    { "name": "Books and Stationary", "type": "expense" },
     { "name": "Salary", "type": "income" },
     { "name": "Freelance", "type": "income" },
     { "name": "Bonus", "type": "income" },
@@ -77,6 +78,14 @@
       "daysAgo": 7
     },
     {
+      "id": "demo-txn-08b",
+      "amount": 950,
+      "type": "expense",
+      "category": "Books and Stationary",
+      "description": "Notebooks, pens, and study material",
+      "daysAgo": 6
+    },
+    {
       "id": "demo-txn-09",
       "amount": 7500,
       "type": "income",
@@ -101,7 +110,8 @@
         "Transport": 5000,
         "Rent": 25000,
         "Utilities": 7000,
-        "Entertainment": 5000
+        "Entertainment": 5000,
+        "Books and Stationary": 3000
       }
     },
     {
@@ -111,7 +121,8 @@
         "Transport": 4500,
         "Rent": 25000,
         "Utilities": 6500,
-        "Entertainment": 4500
+        "Entertainment": 4500,
+        "Books and Stationary": 2500
       }
     }
   ]
