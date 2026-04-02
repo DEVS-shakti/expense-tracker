@@ -1,29 +1,6 @@
 // src/pages/Dashboard.jsx
-import React, { useState, useEffect, useMemo } from "react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  LineChart,
-  Line,
-  CartesianGrid,
-} from "recharts";
-import {
-  Home,
-  DollarSign,
-  Filter,
-  TrendingUp,
-  BarChart2,
-  PieChart as PieChartIcon,
-  Plus,
-} from "lucide-react";
+import React, { useState } from "react";
+import { Home, Plus } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
@@ -31,21 +8,10 @@ import TransactionList from "../components/Transaction/TransactionList";
 import TransactionForm from "../components/Transaction/TransactionForm";
 import Insights from "./Insight";
 import { getUserDisplayName } from "../utils/user";
-import { db } from "../firebase/db";
-import {
-  collection,
-  query,
-  onSnapshot,
-  orderBy,
-  Timestamp,
-} from "firebase/firestore";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [showForm, setShowForm] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("");
-  const [availableMonths, setAvailableMonths] = useState([]);
-  const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
 
   const displayName = getUserDisplayName(user);
@@ -58,62 +24,6 @@ const Dashboard = () => {
       console.error("Logout error:", err);
     }
   };
-
-  useEffect(() => {
-    const unsubscribe = onSnapshot(
-      query(
-        collection(db, `users/${user.uid}/transactions`),
-        orderBy("date", "desc")
-      ),
-      (snapshot) => {
-        const data = snapshot.docs.map((doc) => {
-          const raw = doc.data();
-          const date = raw.date instanceof Timestamp ? raw.date.toDate() : new Date(raw.date);
-          return { id: doc.id, ...raw, date };
-        });
-        setTransactions(data);
-
-        const monthsSet = new Set();
-        data.forEach((t) => {
-          const d = new Date(t.date);
-          const key = `${d.getFullYear()}-${(d.getMonth() + 1)
-            .toString()
-            .padStart(2, "0")}`;
-          monthsSet.add(key);
-        });
-        const monthsArray = Array.from(monthsSet).sort().reverse();
-        setAvailableMonths(monthsArray);
-        if (!selectedDate && monthsArray.length > 0) {
-          setSelectedDate(monthsArray[0]);
-        }
-      }
-    );
-    return () => unsubscribe();
-  }, [user.uid, selectedDate]);
-
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter((t) => {
-      const date = new Date(t.date);
-      const key = `${date.getFullYear()}-${(date.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}`;
-      return key === selectedDate;
-    });
-  }, [transactions, selectedDate]);
-
-  const { totalIncome, totalExpenses, netSavings } = useMemo(() => {
-    let income = 0;
-    let expenses = 0;
-    filteredTransactions.forEach((t) => {
-      if (t.type === "income") income += t.amount;
-      else expenses += t.amount;
-    });
-    return {
-      totalIncome: income,
-      totalExpenses: expenses,
-      netSavings: income - expenses,
-    };
-  }, [filteredTransactions]);
 
   return (
     <div className="p-4 sm:p-6 bg-gray-50 min-h-screen font-sans text-gray-800">
@@ -132,28 +42,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <div className="mb-6 flex flex-col md:flex-row items-start md:items-center gap-4 justify-between bg-white p-4 rounded-xl shadow">
-        <div className="flex items-center gap-2 flex-wrap">
-          <Filter className="w-5 h-5 text-gray-600" />
-          <label htmlFor="month-select" className="font-medium text-lg">
-            Select Month:
-          </label>
-          <select
-            id="month-select"
-            className="p-2 border border-gray-300 border-solid rounded-lg shadow-sm"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          >
-            {availableMonths.map((month) => (
-              <option key={month} value={month}>
-                {new Date(`${month}-01`).toLocaleString("default", {
-                  month: "long",
-                  year: "numeric",
-                })}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="mb-6 flex justify-end">
         <a href="#transactionlist">
           <button className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600 transition text-sm">
             See Transaction
@@ -162,7 +51,7 @@ const Dashboard = () => {
       </div>
 
       <div className="w-full max-w-7xl mx-auto">
-        <Insights selectedDate={selectedDate} />
+        <Insights />
       </div>
 
       <div id="transactionlist" className="mt-8">

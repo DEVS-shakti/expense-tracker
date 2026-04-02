@@ -1,7 +1,14 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "../firebase/db";
-import { auth } from "../firebase/auth";
+import { useAuth } from "../context/AuthContext";
 import {
   PieChart,
   Pie,
@@ -17,6 +24,7 @@ import {
   Bar,
   ResponsiveContainer,
 } from "recharts";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { COLORS, formatCurrency } from "../components/utils/mockUtils";
 import LoadingScreen from "../components/ui/LoadingScreen";
 
@@ -28,87 +36,131 @@ const parseTxnDate = (rawDate) => {
   return Number.isNaN(date.getTime()) ? null : date;
 };
 
-const Insight = () => {
+const monthKeyFromDate = (date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+
+const formatMonthLabel = (monthKey) =>
+  new Date(`${monthKey}-01`).toLocaleDateString("en-IN", {
+    month: "long",
+    year: "numeric",
+  });
+
+const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
+  const { user } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState({});
+  const [selectedMonth, setSelectedMonth] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const currentUser = auth.currentUser;
-  const today = new Date();
-  const currentMonthKey = `${today.getFullYear()}-${String(
-    today.getMonth() + 1,
-  ).padStart(2, "0")}`;
+  useEffect(() => {
+    if (!user?.uid) {
+      setLoading(false);
+      return undefined;
+    }
+
+    const txnQuery = query(
+      collection(db, `users/${user.uid}/transactions`),
+      orderBy("date", "desc"),
+    );
+
+    const unsubscribe = onSnapshot(txnQuery, (snapshot) => {
+      setTransactions(
+        snapshot.docs.map((snapshotDoc) => ({
+          id: snapshotDoc.id,
+          ...snapshotDoc.data(),
+        })),
+      );
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [user?.uid]);
+
+  const availableMonths = useMemo(() => {
+    const months = new Set([monthKeyFromDate(new Date())]);
+
+    transactions.forEach((txn) => {
+      const date = parseTxnDate(txn.date);
+      if (date) months.add(monthKeyFromDate(date));
+    });
+
+    return Array.from(months).sort().reverse();
+  }, [transactions]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!currentUser) {
-        setLoading(false);
+    if (externalSelectedDate && availableMonths.includes(externalSelectedDate)) {
+      setSelectedMonth(externalSelectedDate);
+      return;
+    }
+
+    if (selectedMonth && availableMonths.includes(selectedMonth)) return;
+    if (availableMonths.length > 0) {
+      setSelectedMonth(availableMonths[0]);
+    }
+  }, [availableMonths, externalSelectedDate, selectedMonth]);
+
+  useEffect(() => {
+    const fetchBudget = async () => {
+      if (!user?.uid || !selectedMonth) {
+        setBudgets({});
         return;
       }
 
-      const txnRef = collection(db, `users/${currentUser.uid}/transactions`);
-      const txnSnapshot = await getDocs(txnRef);
-      const txnData = txnSnapshot.docs.map((snapshotDoc) => ({
-        id: snapshotDoc.id,
-        ...snapshotDoc.data(),
-      }));
-
-      const budgetRef = doc(
-        db,
-        `users/${currentUser.uid}/budgets/${currentMonthKey}`,
-      );
+      const budgetRef = doc(db, `users/${user.uid}/budgets/${selectedMonth}`);
       const budgetSnap = await getDoc(budgetRef);
-      const budgetData = budgetSnap.exists()
-        ? budgetSnap.data()
-        : { categoryLimits: {} };
-
-      setTransactions(txnData);
-      setBudgets(budgetData.categoryLimits || {});
-      setLoading(false);
+      setBudgets(budgetSnap.exists() ? budgetSnap.data().categoryLimits || {} : {});
     };
 
-    fetchData();
-  }, [currentMonthKey, currentUser]);
+    fetchBudget();
+  }, [selectedMonth, user?.uid]);
+
+  const selectedMonthIndex = availableMonths.indexOf(selectedMonth);
+  const canGoToPreviousMonth =
+    selectedMonthIndex >= 0 && selectedMonthIndex < availableMonths.length - 1;
+  const canGoToNextMonth = selectedMonthIndex > 0;
+
+  const selectedMonthTransactions = useMemo(
+    () =>
+      transactions.filter((txn) => {
+        const date = parseTxnDate(txn.date);
+        return date && monthKeyFromDate(date) === selectedMonth;
+      }),
+    [selectedMonth, transactions],
+  );
 
   const { income, expense } = useMemo(() => {
     let incomeTotal = 0;
     let expenseTotal = 0;
 
-    transactions.forEach((txn) => {
-      const date = parseTxnDate(txn.date);
-      if (!date) return;
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-      if (key === currentMonthKey) {
-        if (txn.type === "income") incomeTotal += txn.amount;
-        else expenseTotal += txn.amount;
-      }
+    selectedMonthTransactions.forEach((txn) => {
+      if (txn.type === "income") incomeTotal += txn.amount;
+      else expenseTotal += txn.amount;
     });
 
     return { income: incomeTotal, expense: expenseTotal };
-  }, [transactions, currentMonthKey]);
+  }, [selectedMonthTransactions]);
 
   const spendingByCategory = useMemo(() => {
     const map = {};
 
-    transactions.forEach((txn) => {
-      const date = parseTxnDate(txn.date);
-      if (!date) return;
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-      if (txn.type === "expense" && key === currentMonthKey) {
+    selectedMonthTransactions.forEach((txn) => {
+      if (txn.type === "expense") {
         map[txn.category] = (map[txn.category] || 0) + txn.amount;
       }
     });
 
     return Object.entries(map).map(([name, value]) => ({ name, value }));
-  }, [transactions, currentMonthKey]);
+  }, [selectedMonthTransactions]);
 
   const trendData = useMemo(() => {
     const map = {};
-    const now = new Date();
+    const baseDate = selectedMonth
+      ? new Date(`${selectedMonth}-01`)
+      : new Date();
 
     for (let i = 5; i >= 0; i--) {
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      const date = new Date(baseDate.getFullYear(), baseDate.getMonth() - i, 1);
+      const key = monthKeyFromDate(date);
       map[key] = {
         name: date.toLocaleString("default", { month: "short" }),
         Income: 0,
@@ -119,7 +171,7 @@ const Insight = () => {
     transactions.forEach((txn) => {
       const date = parseTxnDate(txn.date);
       if (!date) return;
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      const key = monthKeyFromDate(date);
 
       if (map[key]) {
         if (txn.type === "income") map[key].Income += txn.amount;
@@ -128,17 +180,13 @@ const Insight = () => {
     });
 
     return Object.values(map);
-  }, [transactions]);
+  }, [selectedMonth, transactions]);
 
   const spendingVsBudget = useMemo(() => {
     const actual = {};
 
-    transactions.forEach((txn) => {
-      const date = parseTxnDate(txn.date);
-      if (!date) return;
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-
-      if (key === currentMonthKey && txn.type === "expense") {
+    selectedMonthTransactions.forEach((txn) => {
+      if (txn.type === "expense") {
         actual[txn.category] = (actual[txn.category] || 0) + txn.amount;
       }
     });
@@ -148,7 +196,7 @@ const Insight = () => {
       Budget: budgets[category] || 0,
       Actual: actual[category] || 0,
     }));
-  }, [budgets, transactions, currentMonthKey]);
+  }, [budgets, selectedMonthTransactions]);
 
   if (loading) {
     return <LoadingScreen label="Crunching your latest insights..." compact />;
@@ -156,6 +204,62 @@ const Insight = () => {
 
   return (
     <div className="p-6 space-y-8">
+      <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+              Insight Timeline
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold text-slate-900">
+              {selectedMonth ? formatMonthLabel(selectedMonth) : "Select a month"}
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Move across your available months and refresh every chart instantly.
+            </p>
+          </div>
+
+          <div className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200 bg-slate-50 p-1.5">
+            <button
+              type="button"
+              onClick={() => setSelectedMonth(availableMonths[selectedMonthIndex + 1])}
+              disabled={!canGoToPreviousMonth}
+              className="rounded-full p-2 text-slate-600 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
+              aria-label="Previous month"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            <span className="min-w-[150px] px-3 text-center text-sm font-semibold text-slate-900">
+              {selectedMonth ? formatMonthLabel(selectedMonth) : "No month"}
+            </span>
+            <button
+              type="button"
+              onClick={() => setSelectedMonth(availableMonths[selectedMonthIndex - 1])}
+              disabled={!canGoToNextMonth}
+              className="rounded-full p-2 text-slate-600 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
+              aria-label="Next month"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-5">
+          <input
+            type="range"
+            min="0"
+            max={Math.max(availableMonths.length - 1, 0)}
+            step="1"
+            value={Math.max(selectedMonthIndex, 0)}
+            onChange={(event) =>
+              setSelectedMonth(availableMonths[Number(event.target.value)])
+            }
+            className="h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-sky-600"
+            aria-label="Insight month slider"
+            disabled={availableMonths.length <= 1}
+          />
+        </div>
+      </div>
+
       <div className="grid md:grid-cols-3 gap-6">
         <div className="bg-white p-4 rounded-xl shadow">
           <h2 className="text-lg text-gray-500">Total Income</h2>
@@ -180,7 +284,7 @@ const Insight = () => {
       <div className="bg-white p-4 rounded-xl shadow">
         <h2 className="text-xl font-semibold mb-4">Budget Overview</h2>
         {Object.keys(budgets).length === 0 ? (
-          <p className="text-gray-500">No budget set for this month.</p>
+          <p className="text-gray-500">No budget set for {selectedMonth ? formatMonthLabel(selectedMonth) : "this month"}.</p>
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {Object.entries(budgets).map(([category, limit]) => {
