@@ -14,7 +14,6 @@ import {
   Goal,
   CheckCircle2,
   Instagram,
-  Atom,
   Github,
   BriefcaseBusiness,
 } from "lucide-react";
@@ -651,11 +650,23 @@ const Landing = () => {
             </div>
           </div>
         </div>
-        <div className="border-t border-slate-200 px-4 py-4 text-center text-sm text-slate-600 sm:px-6">
-          <p className="inline-flex items-center gap-2">
-            Developed by Shakti with Codex
-            <Atom className="h-4 w-4 text-sky-600" />
-          </p>
+        <div className="border-t border-slate-200 px-4 py-4 sm:px-6">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-center text-sm text-slate-600 md:flex-row md:text-left">
+            <p>&copy; 2026 TrackExpense. All rights reserved.</p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link to="/privacy-policy" className="hover:text-indigo-700">
+                Privacy Policy
+              </Link>
+              <span className="text-slate-400">|</span>
+              <Link to="/contact" className="hover:text-indigo-700">
+                Contact
+              </Link>
+              <span className="text-slate-400">|</span>
+              <Link to="/about" className="hover:text-indigo-700">
+                About
+              </Link>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
