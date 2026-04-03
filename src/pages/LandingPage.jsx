@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
@@ -179,6 +179,18 @@ const Landing = () => {
             <a href="#insights" className="rounded-lg px-3 py-2 text-sm hover:bg-slate-100">
               Insights
             </a>
+            <Link to="/about" className="rounded-lg px-3 py-2 text-sm hover:bg-slate-100">
+              About
+            </Link>
+            <Link
+              to="/privacy-policy"
+              className="rounded-lg px-3 py-2 text-sm hover:bg-slate-100"
+            >
+              Privacy Policy
+            </Link>
+            <Link to="/contact" className="rounded-lg px-3 py-2 text-sm hover:bg-slate-100">
+              Contact
+            </Link>
             <button
               onClick={handleOpenDemo}
               className="rounded-lg border border-indigo-200 px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-50"
@@ -211,6 +223,27 @@ const Landing = () => {
             >
               Practical Insights
             </a>
+            <Link
+              to="/about"
+              className="block rounded-lg bg-white px-3 py-2 hover:bg-slate-100"
+              onClick={() => setMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link
+              to="/privacy-policy"
+              className="block rounded-lg bg-white px-3 py-2 hover:bg-slate-100"
+              onClick={() => setMenuOpen(false)}
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              to="/contact"
+              className="block rounded-lg bg-white px-3 py-2 hover:bg-slate-100"
+              onClick={() => setMenuOpen(false)}
+            >
+              Contact
+            </Link>
             <button
               onClick={handleOpenDemo}
               className="w-full rounded-lg border border-indigo-200 px-4 py-2 text-indigo-700 hover:bg-indigo-50"
@@ -532,7 +565,7 @@ const Landing = () => {
       </section>
 
       <footer className="border-t border-slate-200 bg-slate-100 text-slate-700">
-        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-5">
           <div>
             <p className="font-semibold text-slate-900">ExpenseTrack</p>
             <p className="mt-2 text-sm text-slate-600">
@@ -556,6 +589,23 @@ const Landing = () => {
               <button onClick={() => navigate("/register")} className="text-left hover:text-indigo-700">
                 Register
               </button>
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900">Company</p>
+            <div className="mt-2 flex flex-col gap-1 text-sm">
+              <Link to="/about" className="hover:text-indigo-700">
+                About
+              </Link>
+              <Link to="/contact" className="hover:text-indigo-700">
+                Contact
+              </Link>
+              <Link to="/privacy-policy" className="hover:text-indigo-700">
+                Privacy Policy
+              </Link>
+              <Link to="/cookies" className="hover:text-indigo-700">
+                Cookies Policy
+              </Link>
             </div>
           </div>
           <div>
