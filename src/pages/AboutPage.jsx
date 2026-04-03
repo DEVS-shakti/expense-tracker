@@ -4,8 +4,11 @@ import PublicPageLayout from "../components/PublicPageLayout";
 const AboutPage = () => (
   <PublicPageLayout
     eyebrow="Company"
-    title="About ExpenseTrack"
-    description="ExpenseTrack is a personal finance web application focused on practical budgeting, transaction tracking, and clear monthly insights for everyday users."
+    title="About TrackExpense"
+    description="TrackExpense is a personal finance web application focused on expense tracking, bill splitting, practical budgeting, and clear monthly insights."
+    seoTitle="About TrackExpense"
+    seoDescription="Learn what TrackExpense does, who built it, and how it helps users track expenses, split bills, and manage budgets."
+    seoPath="/about"
   >
     <section>
       <h2 className="text-xl font-semibold text-slate-900">What the Product Does</h2>

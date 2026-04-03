@@ -22,6 +22,7 @@ import heroImg from "../assets/finnance.svg";
 import work from "../assets/work.svg";
 import secure from "../assets/secure.svg";
 import visual from "../assets/visual.svg";
+import SeoMeta from "../components/SeoMeta";
 import "../index.css";
 
 const advantages = [
@@ -158,9 +159,17 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-800">
+      <SeoMeta
+        title="TrackExpense - Free Expense Tracker & Bill Splitter"
+        description="Track daily expenses, split bills with roommates, and manage your finances easily with this free online expense tracker."
+        keywords="expense tracker, split bills, roommate expense app, budget tracker"
+        path="/"
+      />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 px-4 py-4 backdrop-blur sm:px-6">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <h1 className="text-xl font-bold text-indigo-700 sm:text-2xl">ExpenseTrack</h1>
+          <Link to="/" className="text-xl font-bold text-indigo-700 sm:text-2xl">
+            TrackExpense
+          </Link>
 
           <button
             className="text-slate-700 md:hidden"
@@ -268,16 +277,16 @@ const Landing = () => {
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-3 py-1 text-xs font-semibold text-indigo-700">
               <Sparkles className="h-3.5 w-3.5" /> Money clarity for everyday life
             </div>
-            <h2 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl">
+            <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl">
               Track smarter.
               <br />
               Spend better.
               <br />
-              Save with confidence.
-            </h2>
+              Split bills with confidence.
+            </h1>
             <p className="mt-5 max-w-xl text-base text-slate-600 sm:text-lg">
-              ExpenseTrack helps you organize transactions, control category budgets,
-              and understand monthly trends without complexity.
+              TrackExpense helps you organize transactions, split shared expenses,
+              control category budgets, and understand monthly trends without complexity.
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -297,7 +306,7 @@ const Landing = () => {
 
             <div className="mt-7 grid max-w-lg grid-cols-3 gap-3">
               <MetricCard title="10s" subtitle="Quick entry" />
-              <MetricCard title="3 clips" subtitle="Core flow" />
+              <MetricCard title="Bill split" subtitle="Roommates ready" />
               <MetricCard title="24/7" subtitle="Any device" />
             </div>
           </div>
@@ -308,7 +317,7 @@ const Landing = () => {
             <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 p-5 shadow-[0_30px_80px_rgba(15,23,42,0.16)] backdrop-blur">
               <img
                 src={heroImg}
-                alt="ExpenseTrack dashboard preview"
+                alt="TrackExpense dashboard preview"
                 className="mx-auto w-full max-w-lg"
                 loading="eager"
                 fetchPriority="high"
@@ -363,7 +372,7 @@ const Landing = () => {
                     <div className="relative aspect-[16/10] overflow-hidden rounded-[1.15rem] bg-slate-950">
                       <img
                         src="/demo/dashboardimg.png"
-                        alt="ExpenseTrack dashboard screenshot"
+                        alt="TrackExpense dashboard screenshot"
                         className="h-full w-full object-cover object-top"
                         loading="lazy"
                         decoding="async"
@@ -381,7 +390,7 @@ const Landing = () => {
                     <div className="relative aspect-[16/10] overflow-hidden rounded-[1.15rem] bg-slate-950">
                       <img
                         src="/demo/darkdash.png"
-                        alt="ExpenseTrack dark dashboard screenshot"
+                        alt="TrackExpense dark dashboard screenshot"
                         className="h-full w-full object-cover object-top"
                         loading="lazy"
                         decoding="async"
@@ -404,7 +413,7 @@ const Landing = () => {
                   <div className="relative aspect-[16/10] overflow-hidden rounded-[1.15rem] bg-slate-950">
                     <img
                       src="/demo/profile.png"
-                      alt="ExpenseTrack profile screenshot"
+                      alt="TrackExpense profile screenshot"
                       className="h-full w-full object-cover object-top"
                       loading="lazy"
                       decoding="async"
@@ -448,6 +457,34 @@ const Landing = () => {
               <AdvantageCard key={item.title} item={item} />
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="bg-white px-4 py-14 sm:px-6">
+        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-3">
+          <article className="reveal-on-scroll rounded-2xl border border-slate-200 bg-slate-50 p-6">
+            <h2 className="text-2xl font-bold text-slate-900">What is TrackExpense?</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">
+              TrackExpense is a free expense tracker and bill management app for personal
+              budgeting, shared household spending, and simple monthly money planning.
+            </p>
+          </article>
+          <article className="reveal-on-scroll rounded-2xl border border-slate-200 bg-slate-50 p-6">
+            <h2 className="text-2xl font-bold text-slate-900">How to use this expense tracker</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">
+              Create categories, add income and expenses, set budget limits, and review
+              reports to keep spending visible. For shared living, use the app to track
+              common costs before splitting bills manually.
+            </p>
+          </article>
+          <article className="reveal-on-scroll rounded-2xl border border-slate-200 bg-slate-50 p-6">
+            <h2 className="text-2xl font-bold text-slate-900">Features of the app</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">
+              The app includes expense logging, category-based budgets, reports, trend
+              tracking, profile management, and public legal pages needed for a more
+              production-ready website footprint.
+            </p>
+          </article>
         </div>
       </section>
 
@@ -563,12 +600,28 @@ const Landing = () => {
         </div>
       </section>
 
+      <section className="bg-slate-50 px-4 py-14 sm:px-6">
+        <div className="mx-auto max-w-7xl rounded-[2rem] border border-dashed border-slate-300 bg-white p-6 text-center shadow-sm sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+            Advertising
+          </p>
+          <h2 className="mt-3 text-2xl font-bold text-slate-900">Ad placement area</h2>
+          <p className="mt-3 text-sm text-slate-600 sm:text-base">
+            This reserved section can be used for Google AdSense or another approved ad partner
+            after policy review and publisher approval.
+          </p>
+          <div className="ad-container mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-10 text-sm text-slate-400">
+            Ad container
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-slate-200 bg-slate-100 text-slate-700">
         <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-5">
           <div>
-            <p className="font-semibold text-slate-900">ExpenseTrack</p>
+            <p className="font-semibold text-slate-900">TrackExpense</p>
             <p className="mt-2 text-sm text-slate-600">
-              Smart expense tracking with practical budgeting insights.
+              Free expense tracking, shared bill planning, and practical budgeting insights.
             </p>
           </div>
           <div>
@@ -693,7 +746,7 @@ const DemoClipCard = ({ clip, index }) => (
         autoPlay
         loop
         playsInline
-        preload="metadata"
+        preload="none"
       />
     </div>
     <div className="mt-4 flex items-center justify-between gap-3">

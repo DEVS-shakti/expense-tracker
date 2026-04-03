@@ -22,8 +22,11 @@ const contactMethods = [
 const ContactPage = () => (
   <PublicPageLayout
     eyebrow="Support"
-    title="Contact"
+    title="Contact TrackExpense"
     description="For support requests, business contact, privacy questions, or advertising-related communication, use the details below."
+    seoTitle="Contact TrackExpense"
+    seoDescription="Contact TrackExpense for support, business inquiries, privacy questions, or advertising-related communication."
+    seoPath="/contact"
   >
     <section>
       <h2 className="text-xl font-semibold text-slate-900">Direct Contact</h2>

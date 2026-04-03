@@ -6,6 +6,9 @@ const CookiesPage = () => (
     eyebrow="Legal"
     title="Cookies Policy"
     description="This page explains how ExpenseTrack uses cookies and similar technologies, including optional cookies related to analytics and advertising providers."
+    seoTitle="Cookies Policy - TrackExpense"
+    seoDescription="Understand how TrackExpense uses essential, analytics, personalization, and advertising cookies."
+    seoPath="/cookies"
   >
     <section>
       <h2 className="text-xl font-semibold text-slate-900">What Cookies Are</h2>

@@ -6,6 +6,9 @@ const PrivacyPolicyPage = () => (
     eyebrow="Legal"
     title="Privacy Policy"
     description="This policy explains what information ExpenseTrack may collect, how it is used, and the choices users have when visiting the public website or using the application."
+    seoTitle="Privacy Policy - TrackExpense"
+    seoDescription="Read the TrackExpense privacy policy covering data collection, cookies, advertising, and user choices."
+    seoPath="/privacy-policy"
   >
     <section>
       <h2 className="text-xl font-semibold text-slate-900">Information We Collect</h2>
