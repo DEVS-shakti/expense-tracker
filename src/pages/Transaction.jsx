@@ -19,6 +19,7 @@ import {
   ArrowUpRight,
   CalendarRange,
   Layers3,
+  HandCoins,
   Pencil,
   Plus,
   Receipt,
@@ -444,6 +445,13 @@ const Transactions = () => {
               >
                 <Layers3 className="h-4 w-4" />
                 Manage categories
+              </Link>
+              <Link
+                to="/roommate-splits"
+                className="inline-flex items-center gap-2 rounded-2xl border border-transparent px-2 py-3 text-sm font-semibold text-violet-700 transition hover:text-violet-800"
+              >
+                <HandCoins className="h-4 w-4" />
+                Roommate splitting
               </Link>
             </div>
 
@@ -955,6 +963,15 @@ const Transactions = () => {
                     </p>
 
                     <div className="flex items-center gap-2">
+                      {txn.type === "expense" && (
+                        <Link
+                          to={`/roommate-splits?transaction=${txn.id}`}
+                          className="rounded-2xl border border-violet-200 p-3 text-violet-600 transition hover:bg-violet-50"
+                          aria-label={`Split ${txn.category} with roommates`}
+                        >
+                          <HandCoins className="h-4 w-4" />
+                        </Link>
+                      )}
                       <button
                         type="button"
                         onClick={() => openEditModal(txn)}

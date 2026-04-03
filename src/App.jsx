@@ -23,6 +23,7 @@ const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 const CookiesPage = lazy(() => import("./pages/CookiesPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
+const RoommateSplitPage = lazy(() => import("./pages/RoommateSplitPage"));
 
 const App = () => {
   if (firebaseConfigError) {
@@ -48,6 +49,14 @@ const App = () => {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/login" element={<LoginForm />} />
               <Route path="/register" element={<RegisterForm />} />
+              <Route
+                path="/roommate-splits"
+                element={
+                  <ProtectedRoutes>
+                    <RoommateSplitPage />
+                  </ProtectedRoutes>
+                }
+              />
 
               <Route
                 path="/dashboard"
