@@ -101,7 +101,7 @@ const getCategoryTone = (index) => {
   return tones[index % tones.length];
 };
 
-const SummaryCard = ({ icon: Icon, title, value, accent, description }) => {
+const SummaryCard = ({ icon, title, value, accent, description }) => {
   const accentStyles = {
     emerald: "bg-emerald-100 text-emerald-700",
     rose: "bg-rose-100 text-rose-700",
@@ -116,7 +116,7 @@ const SummaryCard = ({ icon: Icon, title, value, accent, description }) => {
           <p className="mt-2 text-2xl font-semibold text-slate-900">{value}</p>
         </div>
         <div className={`rounded-2xl p-3 ${accentStyles[accent]}`}>
-          <Icon className="h-5 w-5" />
+          {React.createElement(icon, { className: "h-5 w-5" })}
         </div>
       </div>
       <p className="mt-4 text-sm text-slate-500">{description}</p>

@@ -1,30 +1,27 @@
 import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import { BarChart2, DollarSign, Folder, Home, List, LogOut, Menu, User, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { Home, List, BarChart2, User, LogOut, Menu, X, Folder,DollarSign } from "lucide-react"; // Add Folder icon
 
 const navItems = [
   { to: "/dashboard", icon: Home, label: "Dashboard" },
   { to: "/dashboard/transactions", icon: List, label: "Transactions" },
   { to: "/dashboard/insights", icon: BarChart2, label: "Insights" },
-  { to: "/dashboard/categories", icon: Folder, label: "Categories" }, // ✅ Add this line
+  { to: "/dashboard/categories", icon: Folder, label: "Categories" },
   { to: "/dashboard/budgets", icon: DollarSign, label: "Budgets" },
   { to: "/dashboard/profile", icon: User, label: "Profile" },
 ];
 
-
-const SidebarItem = ({ to, Icon, label, collapsed }) => (
+const SidebarItem = ({ to, icon, label, collapsed }) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
-      `flex items-center gap-3 px-4 py-2 rounded-lg transition duration-200 ${
-        isActive
-          ? "bg-indigo-100 text-indigo-700 font-semibold"
-          : "text-gray-700"
-      } hover:bg-indigo-50 ${collapsed ? "justify-center flex" : ""}`
+      `flex items-center gap-3 rounded-lg px-4 py-2 transition duration-200 ${
+        isActive ? "bg-indigo-100 font-semibold text-indigo-700" : "text-gray-700"
+      } hover:bg-indigo-50 ${collapsed ? "flex justify-center" : ""}`
     }
   >
-    <Icon className="w-5 h-5" />
+    {React.createElement(icon, { className: "h-5 w-5" })}
     {!collapsed && <span>{label}</span>}
   </NavLink>
 );
@@ -38,77 +35,64 @@ const DashboardLayout = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Mobile Toggle Button */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
+      <div className="fixed left-4 top-4 z-50 md:hidden">
         {!mobileOpen && (
           <button
+            type="button"
             onClick={() => setMobileOpen(true)}
-            className="bg-white shadow p-2 rounded-lg text-gray-700"
+            className="rounded-lg bg-white p-2 text-gray-700 shadow"
           >
             <Menu />
           </button>
         )}
       </div>
 
-      {/* Sidebar */}
       <aside
-        className={`fixed md:static top-0 left-0 h-full bg-white shadow-md z-40 transform transition-transform duration-300 ${
+        className={`fixed left-0 top-0 z-40 h-full transform bg-white shadow-md transition-transform duration-300 md:static ${
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } ${collapsed ? "w-20" : "w-64"}`}
       >
-        <div className="h-full flex flex-col justify-between p-4">
+        <div className="flex h-full flex-col justify-between p-4">
           <div>
-            <div className="flex items-center justify-between mb-6">
-              {!collapsed && (
-                <h1 className="text-xl font-bold text-indigo-600">
-                  💸 ExpenseTrack
-                </h1>
-              )}
+            <div className="mb-6 flex items-center justify-between">
+              {!collapsed && <h1 className="text-xl font-bold text-indigo-600">ExpenseTrack</h1>}
               <button
-                className="hidden md:block text-gray-600"
+                type="button"
+                className="hidden text-gray-600 md:block"
                 onClick={toggleCollapse}
               >
                 {collapsed ? <Menu /> : <X />}
               </button>
               <button
-                className="md:hidden text-gray-600"
+                type="button"
+                className="text-gray-600 md:hidden"
                 onClick={() => setMobileOpen(false)}
               >
                 <X />
               </button>
             </div>
 
-            {/* Navigation */}
             <nav className="space-y-2">
-              {navItems.map(({ to, icon, label }) => (
-                <SidebarItem
-                  key={to}
-                  to={to}
-                  Icon={icon}
-                  label={label}
-                  collapsed={collapsed}
-                />
+              {navItems.map((item) => (
+                <SidebarItem key={item.to} {...item} collapsed={collapsed} />
               ))}
             </nav>
           </div>
 
-          {/* Logout */}
           <button
+            type="button"
             onClick={logout}
-            className={`flex items-center gap-2 text-red-500 hover:underline px-4 py-2 ${
-              collapsed ? "justify-center flex" : ""
+            className={`flex items-center gap-2 px-4 py-2 text-red-500 hover:underline ${
+              collapsed ? "flex justify-center" : ""
             }`}
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="h-5 w-5" />
             {!collapsed && <span>Logout</span>}
           </button>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main
-        className={`flex-1 bg-gray-50 overflow-y-auto transition-all duration-300 p-4 md:p-6`}
-      >
+      <main className="flex-1 overflow-y-auto bg-gray-50 p-4 transition-all duration-300 md:p-6">
         <Outlet />
       </main>
     </div>

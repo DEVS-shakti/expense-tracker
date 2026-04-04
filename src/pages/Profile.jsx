@@ -49,7 +49,7 @@ const Profile = () => {
   const handleLogout = async () => {
     try {
       await logout();
-    } catch (error) {
+    } catch {
       alert("Logout failed");
     }
   };

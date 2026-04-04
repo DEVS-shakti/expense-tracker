@@ -6,89 +6,84 @@
 ![Issues](https://img.shields.io/github/issues/DEVS-shakti/expense-tracker)
 ![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite&logoColor=white)
 
-A modern personal finance tracker built with React, Firebase, and Tailwind CSS. Track income and expenses, manage budgets by month, and explore insights with interactive charts.
+Track income, expenses, budgets, insights, and shared bills in one React + Firebase app. The project now includes a roommate split flow that works in two modes:
 
-## Table of Contents
+- Signed-in mode with Firebase persistence
+- Guest mode with local browser storage
 
-- Overview
-- Features
-- Demo
-- Screenshots
-- Screens and Routes
-- Tech Stack
-- Getting Started
-- Environment Variables
-- Firebase Setup
-- Data Model
-- Scripts
-- Project Structure
-- Deployment
-- License
+Roommates do not need their own account to be added to a split.
 
-## Overview
+## Highlights
 
-Expense Tracker (ExpenseTrack) is a single-page React application with Firebase Authentication and Firestore persistence. It focuses on quick transaction entry, category management, monthly budgets, and clean visual insights.
+- Email/password and Google authentication
+- Transaction dashboard with filters and quick-add flows
+- Category and monthly budget management
+- Insights and visual spending summaries
+- Profile and account utilities
+- Roommate bill splitting with equal/custom shares
+- Guest-friendly roommate splitting with local persistence
+- Responsive UI built with Tailwind CSS
 
-## Features
+## Demo Media
 
-- Email and password authentication
-- Google sign-in via Firebase Auth
-- Dashboard with month selector and summaries
-- Transaction list and quick add modal
-- Category management for income and expense
-- Monthly budgets per category
-- Insights with category breakdowns, trends, and budget vs actual
-- Profile view with password reset
-- Theme switcher (light, dark, system)
-- Responsive layout with a collapsible sidebar
-
-## Demo
-
-Add your demo GIF to `public/demo.gif` and update the path below if needed.
-
-![Demo](public/demo.gif)
-
-## Screenshots
-
-Add screenshots to `public/screenshots/` and update the paths below.
+### Screenshots
 
 | Screen | Preview |
 | --- | --- |
-| Landing | ![Landing](public/screenshots/landing.png) |
-| Dashboard | ![Dashboard](public/screenshots/dashboard.png) |
-| Insights | ![Insights](public/screenshots/insights.png) |
-| Budgets | ![Budgets](public/screenshots/budgets.png) |
+| Dashboard | ![Dashboard](public/demo/dashboardimg.png) |
+| Dashboard Dark | ![Dashboard Dark](public/demo/darkdash.png) |
+| Profile | ![Profile](public/demo/profile.png) |
+| Profile Dark | ![Profile Dark](public/demo/profiledark.png) |
 
-## Screens and Routes
+### Video Walkthroughs
 
-- `/` Landing page
-- `/login` Login
-- `/register` Register
-- `/dashboard` Dashboard overview
-- `/dashboard/transactions` Transactions
-- `/dashboard/categories` Categories
-- `/dashboard/budgets` Budgets
-- `/dashboard/insights` Insights
-- `/dashboard/profile` Profile
+- [Dashboard demo](public/demo/dashboard-view.mp4)
+- [Budget demo](public/demo/budgetview.mp4)
+- [Category demo](public/demo/categoryview.mp4)
+- [Transaction demo](public/demo/transactionview.mp4)
+
+## Core Features
+
+### Personal finance
+
+- Add income and expense transactions
+- Track monthly cash flow
+- Organize entries by category
+- Manage monthly budgets
+- Review spending insights
+
+### Shared expense workflow
+
+- Add roommates, friends, or flatmates without requiring them to register
+- Create splits from existing expense entries
+- Add a quick expense directly inside the split page
+- Split equally or assign custom amounts
+- Mark shares as settled
+- Copy reminder text for pending balances
+
+## Routes
+
+- `/` landing page
+- `/login` login
+- `/register` register
+- `/roommate-splits` public roommate split workspace
+- `/dashboard` dashboard overview
+- `/dashboard/transactions` transactions
+- `/dashboard/categories` categories
+- `/dashboard/budgets` budgets
+- `/dashboard/insights` insights
+- `/dashboard/profile` profile
 
 ## Tech Stack
 
 | Layer | Tech |
 | --- | --- |
-| UI | React 19, React Router 7, Tailwind CSS |
-| Charts | Recharts |
-| Auth | Firebase Authentication |
-| Data | Firebase Firestore |
+| Frontend | React 19, React Router, Tailwind CSS |
+| Backend | Firebase Authentication, Firestore |
+| Charts | Recharts, Chart.js |
 | Tooling | Vite, ESLint, Prettier |
 
 ## Getting Started
-
-Prerequisites
-
-- Node.js 18+ (recommended)
-- A Firebase project with Auth and Firestore enabled
-
-Install and run
 
 ```bash
 git clone https://github.com/DEVS-shakti/expense-tracker.git
@@ -97,95 +92,61 @@ npm install
 npm run dev
 ```
 
-The app runs at `http://localhost:5173` by default.
+The app runs on `http://localhost:5173`.
 
 ## Environment Variables
 
-Copy the example file and fill in your Firebase project values.
+Create a `.env` file based on `.env.example` and add:
 
-```bash
-copy .env.example .env
+```env
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+VITE_FIREBASE_MEASUREMENT_ID=
 ```
 
-Environment variables used by the app
+## Firebase Notes
 
-- `VITE_FIREBASE_API_KEY`
-- `VITE_FIREBASE_AUTH_DOMAIN`
-- `VITE_FIREBASE_PROJECT_ID`
-- `VITE_FIREBASE_STORAGE_BUCKET`
-- `VITE_FIREBASE_MESSAGING_SENDER_ID`
-- `VITE_FIREBASE_APP_ID`
-- `VITE_FIREBASE_MEASUREMENT_ID`
-
-## Firebase Setup
-
-1. Create a Firebase project.
-2. Enable Authentication providers.
-3. Enable Firestore (production or test rules as needed).
-4. Add your local domain to Firebase Auth authorized domains.
-5. Update `.env` with your Firebase config values.
-
-Enabled auth flows used by the app
-
-- Email and password
-- Google sign-in
-
-## Data Model
-
-Firestore collections used by the app
-
-- `users/{uid}/transactions`
-- `users/{uid}/categories`
-- `users/{uid}/budgets/{yyyy-mm}`
-
-Typical transaction fields
-
-- `amount` (number)
-- `type` (income or expense)
-- `category` (string)
-- `description` (string)
-- `date` (Date or Firestore Timestamp)
+- Enable Email/Password auth
+- Enable Google auth if you want Google sign-in
+- Enable Firestore
+- Add your local/dev domain to authorized domains
 
 ## Scripts
 
-- `npm run dev` Start the Vite dev server
-- `npm run build` Build for production
-- `npm run preview` Preview the production build
-- `npm run lint` Run ESLint
+- `npm run dev` start local development server
+- `npm run build` create production build
+- `npm run preview` preview the production build
+- `npm run lint` run ESLint
 
 ## Project Structure
 
 ```text
 src/
-assets/
-components/
-  Auth/
-  Budget/
-  Transaction/
-  ui/
+  components/
+  context/
+  data/
+  firebase/
+  layouts/
+  pages/
+  routes/
+  services/
   utils/
-context/
-firebase/
-layouts/
-pages/
-routes/
-services/
-utils/
-App.jsx
-main.jsx
-index.css
+public/
+  demo/
+README.md
 ```
 
-## Deployment
+## Recent Update
 
-Build the app and deploy the `dist/` folder to your hosting provider.
-
-```bash
-npm run build
-```
-
-You can also use `npm run preview` locally to validate the production build.
+- Updated the roommate split page UI/UX
+- Removed the account requirement for using roommate splits
+- Added guest-mode local storage support for shared expenses
+- Rewrote the README to include real project media and current features
 
 ## License
 
-MIT. See `LICENSE`.
+MIT. See [LICENSE](LICENSE).

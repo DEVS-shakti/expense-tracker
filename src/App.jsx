@@ -49,14 +49,7 @@ const App = () => {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/login" element={<LoginForm />} />
               <Route path="/register" element={<RegisterForm />} />
-              <Route
-                path="/roommate-splits"
-                element={
-                  <ProtectedRoutes>
-                    <RoommateSplitPage />
-                  </ProtectedRoutes>
-                }
-              />
+              <Route path="/roommate-splits" element={<RoommateSplitPage />} />
 
               <Route
                 path="/dashboard"

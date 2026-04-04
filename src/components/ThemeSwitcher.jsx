@@ -13,7 +13,7 @@ const ThemeSwitcher = () => {
 
   return (
     <div className="theme-switcher" role="group" aria-label="Theme selector">
-      {options.map(({ id, label, icon: Icon }) => (
+      {options.map(({ id, label, icon }) => (
         <button
           key={id}
           type="button"
@@ -21,7 +21,7 @@ const ThemeSwitcher = () => {
           className={`theme-switcher-btn ${theme === id ? "active" : ""}`}
           aria-pressed={theme === id}
         >
-          <Icon size={15} />
+          {React.createElement(icon, { size: 15 })}
           <span>{label}</span>
         </button>
       ))}
