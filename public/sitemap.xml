@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://trackexpense-devs.netlify.app/</loc>
+    <loc>https://devshakti2024.netlify.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://trackexpense-devs.netlify.app/about</loc>
+    <loc>https://devshakti2024.netlify.app/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://trackexpense-devs.netlify.app/contact</loc>
+    <loc>https://devshakti2024.netlify.app/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://trackexpense-devs.netlify.app/privacy-policy</loc>
+    <loc>https://devshakti2024.netlify.app/privacy-policy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://trackexpense-devs.netlify.app/cookies</loc>
+    <loc>https://devshakti2024.netlify.app/cookies</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://trackexpense-devs.netlify.app/login</loc>
+    <loc>https://devshakti2024.netlify.app/login</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://trackexpense-devs.netlify.app/register</loc>
+    <loc>https://devshakti2024.netlify.app/register</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

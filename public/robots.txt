@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dashboard
 Disallow: /dashboard/
 
-Sitemap: https://trackexpense-devs.netlify.app/sitemap.xml
+Sitemap: https://devshakti2024.netlify.app/sitemap.xml

@@ -271,7 +271,7 @@ const Landing = () => {
         )}
       </header>
 
-      <section className="bg-[radial-gradient(circle_at_top_left,_rgba(99,102,241,0.18),_transparent_28%),linear-gradient(135deg,_#eef2ff_0%,_#f8fafc_42%,_#ffffff_100%)] px-4 pb-20 pt-12 sm:px-6">
+      <section className="bg-radial-gradient(circle_at_top_left,_rgba(99,102,241,0.18) bg-_transparent_28%) bg-linear-gradient(135deg,_-[#eef2ff_0%,_#f8fafc_42%,_#ffffff_100%)px-4] pb-20 pt-12 sm:px-6">
         <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2">
           <div className="reveal-on-scroll">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-3 py-1 text-xs font-semibold text-indigo-700">
@@ -333,7 +333,7 @@ const Landing = () => {
         ref={demoSectionRef}
         className="relative overflow-hidden bg-slate-950 px-4 py-16 text-white sm:px-6"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.22),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(99,102,241,0.26),_transparent_25%)]" />
+        <div className="bg-radial-gradient(circle_at_top,_rgba(59,130,246,0.22) bg-_transparent_30%) bg-radial-gradient(circle_at_bottom_right,_rgba(99,102,241,0.26) bg-_transparent_25%) absolute inset-0" />
         <div className="relative mx-auto max-w-7xl">
           <div className="reveal-on-scroll max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-sky-300">
@@ -682,7 +682,7 @@ const Landing = () => {
               </a>
               <br />
               <a
-                href="https://shakti2024.netlify.app"
+                href="https://devshakti2024.netlify.app"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 hover:text-indigo-700"
