@@ -203,7 +203,7 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
   }
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="space-y-8 p-6">
       <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -260,40 +260,40 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        <div className="bg-white p-4 rounded-xl shadow">
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="rounded-xl bg-white p-4 shadow">
           <h2 className="text-lg text-gray-500">Total Income</h2>
-          <div className="text-3xl text-green-600 font-bold">
+          <div className="text-3xl font-bold text-green-600">
             {formatCurrency(income)}
           </div>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow">
+        <div className="rounded-xl bg-white p-4 shadow">
           <h2 className="text-lg text-gray-500">Total Expense</h2>
-          <div className="text-3xl text-red-600 font-bold">
+          <div className="text-3xl font-bold text-red-600">
             {formatCurrency(expense)}
           </div>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow">
+        <div className="rounded-xl bg-white p-4 shadow">
           <h2 className="text-lg text-gray-500">Net Savings</h2>
-          <div className="text-3xl text-blue-600 font-bold">
+          <div className="text-3xl font-bold text-blue-600">
             {formatCurrency(income - expense)}
           </div>
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-xl shadow">
-        <h2 className="text-xl font-semibold mb-4">Budget Overview</h2>
+      <div className="rounded-xl bg-white p-4 shadow">
+        <h2 className="mb-4 text-xl font-semibold">Budget Overview</h2>
         {Object.keys(budgets).length === 0 ? (
           <p className="text-gray-500">No budget set for {selectedMonth ? formatMonthLabel(selectedMonth) : "this month"}.</p>
         ) : (
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {Object.entries(budgets).map(([category, limit]) => {
               const spent =
                 spendingByCategory.find((entry) => entry.name === category)
                   ?.value || 0;
 
               return (
-                <li key={category} className="border p-3 rounded-lg shadow-sm">
+                <li key={category} className="rounded-lg border p-3 shadow-sm">
                   <div className="font-medium">{category}</div>
                   <div className="text-sm text-gray-600">
                     Spent {formatCurrency(spent)} of {formatCurrency(limit)}
@@ -305,9 +305,9 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="text-xl font-semibold mb-4">Spending by Category</h3>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="rounded-xl bg-white p-6 shadow">
+          <h3 className="mb-4 text-xl font-semibold">Spending by Category</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -329,8 +329,8 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="text-xl font-semibold mb-4">Income vs Expense Trend</h3>
+        <div className="rounded-xl bg-white p-6 shadow">
+          <h3 className="mb-4 text-xl font-semibold">Income vs Expense Trend</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={trendData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -355,8 +355,8 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow">
-        <h3 className="text-xl font-semibold mb-4">Spending vs Budget</h3>
+      <div className="rounded-xl bg-white p-6 shadow">
+        <h3 className="mb-4 text-xl font-semibold">Spending vs Budget</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={spendingVsBudget}>
             <CartesianGrid strokeDasharray="3 3" />

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { BarChart2, DollarSign, Folder, Home, List, LogOut, Menu, User, X } from "lucide-react";
+import { BarChart2, DollarSign, Folder, Home, List, LogOut, Menu, User, X, Sparkles, MessageCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { AssistantPanel } from "../components/Assistant/AssistantPanel";
 
 const navItems = [
   { to: "/dashboard", icon: Home, label: "Dashboard" },
@@ -30,6 +31,7 @@ const DashboardLayout = () => {
   const { logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [assistantOpen, setAssistantOpen] = useState(false);
 
   const toggleCollapse = () => setCollapsed((prev) => !prev);
 
@@ -92,8 +94,29 @@ const DashboardLayout = () => {
         </div>
       </aside>
 
-      <main className="flex-1 overflow-y-auto bg-gray-50 p-4 transition-all duration-300 md:p-6">
-        <Outlet />
+      <main className="flex-1 overflow-hidden relative bg-gray-50 flex">
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-y-auto p-4 transition-all duration-300 md:p-6">
+          <Outlet />
+        </div>
+
+        {/* Smart Assistant Overlay Form */}
+        {assistantOpen && (
+          <div className="absolute inset-y-0 right-0 z-50 flex shadow-[rgba(0,_0,_0,_0.2)_0px_60px_40px_-7px] animate-in slide-in-from-right-8 duration-300">
+            <AssistantPanel onClose={() => setAssistantOpen(false)} />
+          </div>
+        )}
+
+        {/* Floating Action Button */}
+        {!assistantOpen && (
+          <button
+            onClick={() => setAssistantOpen(true)}
+            className="absolute bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 shadow-xl shadow-indigo-200 text-white hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all group duration-300"
+            title="Ask Smart Assistant"
+          >
+            <Sparkles className="h-6 w-6" />
+          </button>
+        )}
       </main>
     </div>
   );
