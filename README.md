@@ -94,6 +94,30 @@ npm run dev
 
 The app runs on `http://localhost:5173`.
 
+### AI Proxy Server (local)
+
+This project includes a lightweight local AI proxy that verifies Firebase ID tokens and calls Google Gemini/PaLM using an API key stored in environment variables. The server file is `server_index.js` at the project root.
+
+To run the proxy locally:
+
+1. Copy `.env.example` to `.env` and set `GEMINI_API_KEY` and `FIREBASE_SERVICE_ACCOUNT` (service account JSON as a single-line string). Do NOT commit `.env`.
+
+2. Install server dependencies (from project root):
+
+```bash
+npm install express cors firebase-admin dotenv
+```
+
+3. Start the server:
+
+```bash
+npm run start:server
+```
+
+4. The server listens on `PORT` (default 4000). The frontend will call `POST /api/assistant` and include the Firebase ID token in the `Authorization: Bearer <idToken>` header.
+
+Security note: Keep `GEMINI_API_KEY` and service account JSON secret. For production, run the proxy on a secure host and restrict access.
+
 ## Environment Variables
 
 Create a `.env` file based on `.env.example` and add:
@@ -106,7 +130,15 @@ VITE_FIREBASE_STORAGE_BUCKET=
 VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID=
 VITE_FIREBASE_MEASUREMENT_ID=
+VITE_ASSISTANT_API_BASE=
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-3.5-flash
+ASSISTANT_MAX_TRANSACTIONS=250
+FIREBASE_PROJECT_ID=
+FIREBASE_SERVICE_ACCOUNT=
 ```
+
+`VITE_ASSISTANT_API_BASE` can stay empty when the frontend is using the Vite dev proxy. Set it to your deployed API origin when the backend runs elsewhere.
 
 ## Firebase Notes
 

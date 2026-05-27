@@ -8,6 +8,8 @@ export const extractDateRange = (input) => {
   
   if (normalized.includes("today")) return "today";
   if (normalized.includes("yesterday")) return "yesterday";
+  if (normalized.includes("last 7 days") || normalized.includes("past week") || normalized.includes("recent")) return "last_7_days";
+  if (normalized.includes("last 30 days") || normalized.includes("past month") || normalized.includes("latest")) return "last_30_days";
   if (normalized.includes("this week")) return "this_week";
   if (normalized.includes("last week")) return "last_week";
   if (normalized.includes("this month")) return "this_month";
@@ -77,7 +79,7 @@ const extractIntent = (input) => {
   }
 
   // List/Show triggers
-  if (normalized.includes("show") || normalized.includes("list") || normalized.includes("what are") || normalized.includes("get") || normalized.includes("transactions") || normalized.includes("expenses")) {
+  if (normalized.includes("show") || normalized.includes("list") || normalized.includes("what are") || normalized.includes("get") || normalized.includes("transactions") || normalized.includes("expenses") || normalized.includes("recent") || normalized.includes("latest")) {
     return "list";
   }
   

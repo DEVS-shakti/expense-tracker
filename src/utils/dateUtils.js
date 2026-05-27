@@ -19,6 +19,22 @@ export const getDateRange = (rangeType) => {
   const now = new Date();
   
   switch (rangeType) {
+    case "last_7_days": {
+      const start = new Date(now);
+      start.setDate(now.getDate() - 6);
+      return {
+        start: getStartOfDay(start),
+        end: getEndOfDay(now),
+      };
+    }
+    case "last_30_days": {
+      const start = new Date(now);
+      start.setDate(now.getDate() - 29);
+      return {
+        start: getStartOfDay(start),
+        end: getEndOfDay(now),
+      };
+    }
     case "today": {
       return {
         start: getStartOfDay(now),

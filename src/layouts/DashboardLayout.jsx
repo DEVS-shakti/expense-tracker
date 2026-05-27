@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { BarChart2, DollarSign, Folder, Home, List, LogOut, Menu, User, X, Sparkles, MessageCircle } from "lucide-react";
+import { BarChart2, DollarSign, Folder, Home, List, LogOut, Menu, User, X, Sparkles } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { AssistantPanel } from "../components/Assistant/AssistantPanel";
 
@@ -102,7 +102,10 @@ const DashboardLayout = () => {
 
         {/* Smart Assistant Overlay Form */}
         {assistantOpen && (
-          <div className="absolute inset-y-0 right-0 z-50 flex shadow-[rgba(0,_0,_0,_0.2)_0px_60px_40px_-7px] animate-in slide-in-from-right-8 duration-300">
+          <div
+            className="absolute inset-0 z-50 flex justify-end bg-slate-950/20 backdrop-blur-[1px] shadow-[rgba(0,_0,_0,_0.2)_0px_60px_40px_-7px] animate-in fade-in duration-300"
+            onClick={() => setAssistantOpen(false)}
+          >
             <AssistantPanel onClose={() => setAssistantOpen(false)} />
           </div>
         )}
@@ -111,10 +114,13 @@ const DashboardLayout = () => {
         {!assistantOpen && (
           <button
             onClick={() => setAssistantOpen(true)}
-            className="absolute bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 shadow-xl shadow-indigo-200 text-white hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all group duration-300"
+            className="absolute bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-indigo-600 px-4 py-3 text-white shadow-xl shadow-indigo-200 transition-all duration-300 hover:scale-105 hover:bg-indigo-700 active:scale-95"
             title="Ask Smart Assistant"
           >
             <Sparkles className="h-6 w-6" />
+            <span className="hidden text-sm font-semibold tracking-wide sm:inline">
+              Ask Guide
+            </span>
           </button>
         )}
       </main>

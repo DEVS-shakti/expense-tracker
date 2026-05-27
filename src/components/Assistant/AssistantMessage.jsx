@@ -1,5 +1,20 @@
 import React from 'react';
-import { ArrowDownRight, ArrowUpRight, TrendingUp, TrendingDown, Info, List as ListIcon, Maximize, Minimize, Calculator, CalendarIcon, PieChart, Search } from 'lucide-react';
+import {
+  ArrowDownRight,
+  ArrowRight,
+  ArrowUpRight,
+  Github,
+  TrendingUp,
+  TrendingDown,
+  Info,
+  List as ListIcon,
+  Maximize,
+  Minimize,
+  Calculator,
+  PieChart,
+  Search,
+  BarChart3,
+} from 'lucide-react';
 
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-IN", {
@@ -218,6 +233,148 @@ const TransactionList = ({ data }) => {
   );
 };
 
+const AnswerCard = ({ message }) => (
+  <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4 shadow-sm">
+    <div className="mb-2 flex items-center gap-2">
+      <Info className="h-4 w-4 text-sky-600" />
+      <span className="text-xs font-semibold uppercase tracking-wider text-sky-700">
+        Guide answer
+      </span>
+    </div>
+    <p className="whitespace-pre-line text-sm leading-6 text-slate-700">{message}</p>
+  </div>
+);
+
+const AnalysisCard = ({ card }) => {
+  const metrics = Array.isArray(card?.metrics) ? card.metrics : [];
+  const highlights = Array.isArray(card?.highlights) ? card.highlights : [];
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-cyan-200 bg-white shadow-sm">
+      <div className="bg-[linear-gradient(135deg,_#0f172a,_#0ea5e9_55%,_#bae6fd)] px-4 py-4 text-white">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/65">
+              Chart explanation
+            </p>
+            <h4 className="mt-2 text-lg font-semibold">{card?.title || "Why this changed"}</h4>
+            {card?.subtitle && <p className="mt-1 text-sm text-white/80">{card.subtitle}</p>}
+          </div>
+          <div className="rounded-2xl bg-white/15 p-3 backdrop-blur">
+            <BarChart3 className="h-5 w-5" />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-3 px-4 py-4">
+        {metrics.length > 0 && (
+          <div className="grid gap-2 sm:grid-cols-3">
+            {metrics.map((metric) => (
+              <div key={metric.label} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                  {metric.label}
+                </p>
+                <p className="mt-1 text-base font-semibold text-slate-900">{metric.value}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {highlights.length > 0 && (
+          <div className="space-y-2">
+            {highlights.map((item) => (
+              <div key={item.label} className="flex items-center justify-between rounded-2xl border border-cyan-100 bg-cyan-50 px-4 py-3">
+                <p className="text-sm font-semibold text-slate-900">{item.label}</p>
+                <p className="text-sm font-bold text-cyan-700">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {card?.note && (
+          <p className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-6 text-slate-600">
+            {card.note}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const OverviewCard = ({ data }) => {
+  const sections = Array.isArray(data?.sections) ? data.sections : [];
+
+  if (sections.length === 0) return null;
+
+  return (
+    <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
+      <div className="mb-3 flex items-center gap-2">
+        <TrendingUp className="h-4 w-4 text-emerald-600" />
+        <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
+          {data?.title || "Overview"}
+        </span>
+      </div>
+      <div className="grid gap-2">
+        {sections.map((section) => (
+          <div
+            key={`${section.range}-${section.label}`}
+            className="flex items-center justify-between rounded-2xl border border-emerald-100 bg-white px-4 py-3"
+          >
+            <div>
+              <p className="text-sm font-semibold text-slate-900">{section.label}</p>
+              <p className="text-xs text-slate-500">{section.count} expense entries</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm font-bold text-slate-900">{formatCurrency(section.total)}</p>
+              <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Spent</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ProfileCard = ({ card, data }) => (
+  <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="bg-[linear-gradient(135deg,_#0f172a,_#1d4ed8_55%,_#93c5fd)] px-4 py-4 text-white">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
+            Assistant intro
+          </p>
+          <h4 className="mt-2 text-lg font-semibold">{card?.title || "Built by Dev Shakti"}</h4>
+        </div>
+        <div className="rounded-2xl bg-white/15 p-3 backdrop-blur">
+          <Github className="h-5 w-5" />
+        </div>
+      </div>
+      <p className="mt-3 max-w-xl text-sm leading-6 text-white/90">
+        {card?.description ||
+          "Created and maintained by DEVS-shakti for tracking expenses, budgets, insights, and shared bills."}
+      </p>
+    </div>
+
+    <div className="space-y-3 px-4 py-4">
+      <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
+        <Github className="h-4 w-4 text-slate-700" />
+        <div className="flex-1">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">GitHub</p>
+          <a
+            href={data?.githubUrl || card?.githubUrl || "https://github.com/DEVS-shakti"}
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm font-semibold text-slate-900 hover:text-indigo-600"
+          >
+            {data?.githubUrl || card?.githubUrl || "https://github.com/DEVS-shakti"}
+          </a>
+        </div>
+        <ArrowRight className="h-4 w-4 text-slate-300" />
+      </div>
+    </div>
+  </div>
+);
+
 export const AssistantMessage = ({ msg }) => {
   const isUser = msg.role === 'user';
 
@@ -237,18 +394,35 @@ export const AssistantMessage = ({ msg }) => {
         
         {/* Render Text Message if exists */}
         {msg.message && (
-          <div className="rounded-[1.2rem] rounded-tl-[4px] bg-white border border-slate-200 px-4 py-3 text-sm text-slate-700 leading-relaxed shadow-sm">
-            {msg.message}
-          </div>
+          msg.type === "answer" ? (
+            <AnswerCard message={msg.message} />
+          ) : msg.type === "profile" ? (
+            <div className="space-y-3">
+              <AnswerCard message={msg.message} />
+              <ProfileCard card={msg.card} data={msg.data} />
+            </div>
+          ) : (
+            <div className="rounded-[1.2rem] rounded-tl-[4px] bg-white border border-slate-200 px-4 py-3 text-sm text-slate-700 leading-relaxed shadow-sm">
+              {msg.message}
+            </div>
+          )
         )}
 
         {/* Render Visual Structured Data */}
         {msg.type === "summary" && msg.data && (
           <SummaryCard data={msg.data} />
         )}
+
+        {msg.type === "overview" && msg.data && (
+          <OverviewCard data={msg.data} />
+        )}
         
         {msg.type === "comparison" && msg.data && (
           <ComparisonCard data={msg.data} />
+        )}
+
+        {msg.card?.kind === "analysis" && (
+          <AnalysisCard card={msg.card} />
         )}
 
         {msg.type === "group" && msg.data && (
@@ -257,6 +431,19 @@ export const AssistantMessage = ({ msg }) => {
 
         {msg.type === "list" && msg.data && (
           <TransactionList data={msg.data} />
+        )}
+
+        {Array.isArray(msg.followUps) && msg.followUps.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {msg.followUps.map((followUp) => (
+              <span
+                key={followUp}
+                className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium text-slate-600"
+              >
+                {followUp}
+              </span>
+            ))}
+          </div>
         )}
       </div>
     </div>
