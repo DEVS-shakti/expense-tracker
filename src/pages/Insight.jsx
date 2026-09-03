@@ -204,7 +204,7 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
 
   return (
     <div className="space-y-8 p-6">
-      <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="app-surface rounded-[1.75rem] border border-slate-200 p-5 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
@@ -261,19 +261,19 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <div className="rounded-xl bg-white p-4 shadow">
+        <div className="app-surface rounded-xl p-4 shadow">
           <h2 className="text-lg text-gray-500">Total Income</h2>
           <div className="text-3xl font-bold text-green-600">
             {formatCurrency(income)}
           </div>
         </div>
-        <div className="rounded-xl bg-white p-4 shadow">
+        <div className="app-surface rounded-xl p-4 shadow">
           <h2 className="text-lg text-gray-500">Total Expense</h2>
           <div className="text-3xl font-bold text-red-600">
             {formatCurrency(expense)}
           </div>
         </div>
-        <div className="rounded-xl bg-white p-4 shadow">
+        <div className="app-surface rounded-xl p-4 shadow">
           <h2 className="text-lg text-gray-500">Net Savings</h2>
           <div className="text-3xl font-bold text-blue-600">
             {formatCurrency(income - expense)}
@@ -281,7 +281,7 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
         </div>
       </div>
 
-      <div className="rounded-xl bg-white p-4 shadow">
+      <div className="app-surface rounded-xl p-4 shadow">
         <h2 className="mb-4 text-xl font-semibold">Budget Overview</h2>
         {Object.keys(budgets).length === 0 ? (
           <p className="text-gray-500">No budget set for {selectedMonth ? formatMonthLabel(selectedMonth) : "this month"}.</p>
@@ -306,7 +306,7 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-xl bg-white p-6 shadow">
+        <div className="app-surface rounded-xl p-6 shadow">
           <h3 className="mb-4 text-xl font-semibold">Spending by Category</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -329,7 +329,7 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="rounded-xl bg-white p-6 shadow">
+        <div className="app-surface rounded-xl p-6 shadow">
           <h3 className="mb-4 text-xl font-semibold">Income vs Expense Trend</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={trendData}>
@@ -355,7 +355,7 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
         </div>
       </div>
 
-      <div className="rounded-xl bg-white p-6 shadow">
+      <div className="app-surface rounded-xl p-6 shadow">
         <h3 className="mb-4 text-xl font-semibold">Spending vs Budget</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={spendingVsBudget}>
@@ -374,4 +374,3 @@ const Insight = ({ selectedDate: externalSelectedDate = "" }) => {
 };
 
 export default Insight;
-

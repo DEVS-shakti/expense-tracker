@@ -96,7 +96,7 @@ const TransactionList = () => {
   return (
     <div className="mx-auto mt-8 w-full max-w-4xl">
       <h2 className="mb-4 text-center text-4xl font-bold">Your Transactions</h2>
-      <div className="overflow-x-auto rounded-xl bg-white shadow-md">
+      <div className="transaction-feed overflow-x-auto rounded-xl shadow-md">
         <table className="min-w-full table-auto">
           <thead>
             <tr className="bg-gray-100 text-left text-sm uppercase tracking-wider">
@@ -119,21 +119,25 @@ const TransactionList = () => {
               transactions.map((txn) => (
                 <tr key={txn.id} className="border-t text-sm">
                   <td className="p-3">{formatDate(txn.date)}</td>
-                  <td
-                    className={`p-3 ${
-                      txn.type === "income" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {txn.type}
+                  <td className="p-3">
+                    <span
+                      className={`transaction-type-badge ${
+                        txn.type === "income" ? "income" : "expense"
+                      }`}
+                    >
+                      {txn.type === "income" ? "↗" : "↘"} {txn.type}
+                    </span>
                   </td>
                   <td className="p-3">{txn.category}</td>
-                  <td className="p-3 font-medium">{formatCurrency(txn.amount)}</td>
+                  <td className="transaction-amount p-3 font-medium">
+                    {formatCurrency(txn.amount)}
+                  </td>
                   <td className="p-3">{txn.description || "-"}</td>
                   <td className="p-3">
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        className="rounded-md p-2 text-blue-600 transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="transaction-action rounded-md p-2 transition hover:bg-slate-700/50 disabled:cursor-not-allowed disabled:opacity-50"
                         onClick={() => setEditTxn({ ...txn, date: formatDate(txn.date) })}
                         aria-label={`Edit transaction ${txn.category}`}
                         disabled={Boolean(pendingDeleteId)}
@@ -142,7 +146,7 @@ const TransactionList = () => {
                       </button>
                       <button
                         type="button"
-                        className="rounded-md p-2 text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="transaction-action rounded-md p-2 transition hover:bg-slate-700/50 disabled:cursor-not-allowed disabled:opacity-50"
                         onClick={() => handleDelete(txn.id)}
                         aria-label={`Delete transaction ${txn.category}`}
                         disabled={Boolean(pendingDeleteId)}
@@ -160,7 +164,7 @@ const TransactionList = () => {
 
       {editTxn && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="relative mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+          <div className="transaction-edit-modal relative mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
             <button
               type="button"
               onClick={() => setEditTxn(null)}

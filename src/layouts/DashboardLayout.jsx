@@ -17,9 +17,9 @@ const SidebarItem = ({ to, icon, label, collapsed }) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
-      `flex items-center gap-3 rounded-lg px-4 py-2 transition duration-200 ${
-        isActive ? "bg-indigo-100 font-semibold text-indigo-700" : "text-gray-700"
-      } hover:bg-indigo-50 ${collapsed ? "flex justify-center" : ""}`
+      `sidebar-item flex items-center gap-3 rounded-lg px-4 py-2 transition duration-200 ${
+        isActive ? "sidebar-item-active font-semibold" : ""
+      } ${collapsed ? "flex justify-center" : ""}`
     }
   >
     {React.createElement(icon, { className: "h-5 w-5" })}
@@ -42,7 +42,7 @@ const DashboardLayout = () => {
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="rounded-lg bg-white p-2 text-gray-700 shadow"
+            className="app-surface rounded-lg p-2 text-gray-700 shadow"
           >
             <Menu />
           </button>
@@ -50,7 +50,7 @@ const DashboardLayout = () => {
       </div>
 
       <aside
-        className={`fixed left-0 top-0 z-40 h-full transform bg-white shadow-md transition-transform duration-300 md:static ${
+        className={`app-surface fixed left-0 top-0 z-40 h-full transform shadow-md transition-transform duration-300 md:static ${
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } ${collapsed ? "w-20" : "w-64"}`}
       >
@@ -94,7 +94,7 @@ const DashboardLayout = () => {
         </div>
       </aside>
 
-      <main className="flex-1 overflow-hidden relative bg-gray-50 flex">
+      <main className="app-page relative flex flex-1 overflow-hidden">
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto p-4 transition-all duration-300 md:p-6">
           <Outlet />

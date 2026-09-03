@@ -26,8 +26,8 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen font-sans text-gray-800">
-      <header className="flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-xl shadow mb-6 gap-4">
+    <div className="app-page min-h-screen bg-gray-50 p-4 font-sans text-gray-800 sm:p-6">
+      <header className="app-surface mb-6 flex flex-col items-center justify-between gap-4 rounded-xl p-4 shadow md:flex-row">
         <h1 className="text-2xl sm:text-3xl font-bold text-indigo-700 flex items-center gap-2">
           <Home className="w-6 h-6 sm:w-8 sm:h-8" /> Dashboard
         </h1>
@@ -68,7 +68,7 @@ const Dashboard = () => {
 
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white w-full max-w-lg mx-4 p-6 rounded-xl shadow-xl relative">
+          <div className="app-surface relative mx-4 w-full max-w-lg rounded-xl p-6 shadow-xl">
             <button
               onClick={() => setShowForm(false)}
               className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
@@ -87,4 +87,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

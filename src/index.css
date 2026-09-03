@@ -17,15 +17,25 @@ body {
 
 :root {
   color-scheme: light;
+  --bg-surface: #ffffff;
+  --bg-surface-raised: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --border-subtle: #cbd5e1;
 }
 
 html.dark {
   color-scheme: dark;
+  --bg-surface: #0f172a;
+  --bg-surface-raised: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --border-subtle: #64748b;
 }
 
 body {
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: var(--bg-page, #f8fafc);
+  color: var(--text-primary);
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
@@ -202,8 +212,9 @@ body {
 }
 
 html.dark body {
-  background-color: #020617;
-  color: #e2e8f0;
+  --bg-page: #020617;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
 }
 
 html.dark .theme-switcher {
@@ -259,6 +270,11 @@ html.dark .loading-label {
 
 html.dark .bg-white {
   background-color: #0f172a !important;
+}
+
+html.dark .bg-white\/90,
+html.dark .bg-white\/95 {
+  background-color: rgba(15, 23, 42, 0.96) !important;
 }
 
 html.dark .bg-gray-50 {
@@ -337,6 +353,125 @@ html.dark textarea {
 html.dark option {
   background: #0b1220;
   color: #e2e8f0;
+}
+
+.transaction-feed {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.app-surface {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.app-page {
+  background-color: var(--bg-page, #f8fafc);
+  color: var(--text-primary);
+}
+
+.sidebar-item {
+  color: var(--text-secondary);
+}
+
+.sidebar-item:hover {
+  background-color: #eef2ff;
+  color: #1e1b4b;
+}
+
+.sidebar-item-active {
+  background-color: #e0e7ff;
+  color: #312e81;
+}
+
+.transaction-feed thead tr {
+  background-color: var(--bg-surface-raised);
+  color: var(--text-primary);
+}
+
+.transaction-feed tbody tr {
+  border-color: var(--border-subtle);
+}
+
+.transaction-feed tbody td {
+  color: var(--text-secondary);
+}
+
+.transaction-feed tbody td.transaction-amount {
+  color: var(--text-primary);
+}
+
+.transaction-feed .transaction-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.transaction-feed .transaction-type-badge.expense {
+  border-color: #f87171;
+  background-color: #7f1d1d;
+  color: #fecaca;
+}
+
+.transaction-feed .transaction-type-badge.income {
+  border-color: #4ade80;
+  background-color: #14532d;
+  color: #bbf7d0;
+}
+
+.transaction-feed .transaction-action {
+  color: #2563eb;
+}
+
+.transaction-feed .transaction-action:hover {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.transaction-feed .transaction-action:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+html.dark .transaction-feed .transaction-action {
+  color: #cbd5e1;
+}
+
+html.dark .transaction-feed .transaction-action:hover {
+  background-color: rgba(51, 65, 85, 0.5);
+  color: #f8fafc;
+}
+
+html.dark .transaction-edit-modal {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+html.dark .app-page {
+  --bg-page: #020617;
+}
+
+html.dark .sidebar-item {
+  color: var(--text-secondary);
+}
+
+html.dark .sidebar-item:hover {
+  background-color: #334155;
+  color: var(--text-primary);
+}
+
+html.dark .sidebar-item-active {
+  background-color: #3730a3;
+  color: #ffffff;
 }
 
 @media (max-width: 786px) {
