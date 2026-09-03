@@ -42,7 +42,7 @@ const DashboardLayout = () => {
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="rounded-lg bg-white p-2 text-gray-700 shadow"
+            className="dashboard-menu-button rounded-lg bg-white p-2 text-gray-700 shadow"
           >
             <Menu />
           </button>
@@ -50,7 +50,7 @@ const DashboardLayout = () => {
       </div>
 
       <aside
-        className={`fixed left-0 top-0 z-40 h-full transform bg-white shadow-md transition-transform duration-300 md:static ${
+        className={`dashboard-sidebar fixed left-0 top-0 z-40 h-full transform bg-white shadow-md transition-transform duration-300 md:static ${
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } ${collapsed ? "w-20" : "w-64"}`}
       >
@@ -94,7 +94,7 @@ const DashboardLayout = () => {
         </div>
       </aside>
 
-      <main className="flex-1 overflow-hidden relative bg-gray-50 flex">
+      <main className="dashboard-main relative flex flex-1 overflow-hidden bg-gray-50">
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto p-4 transition-all duration-300 md:p-6">
           <Outlet />

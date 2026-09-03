@@ -17,10 +17,26 @@ body {
 
 :root {
   color-scheme: light;
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-raised: #ffffff;
+  --bg-surface-muted: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #475569;
+  --border-subtle: #cbd5e1;
 }
 
 html.dark {
   color-scheme: dark;
+  --bg-app: #020617;
+  --bg-surface: #0f172a;
+  --bg-surface-raised: #111c2f;
+  --bg-surface-muted: #162235;
+  --text-primary: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --text-muted: #cbd5e1;
+  --border-subtle: #64748b;
 }
 
 body {
@@ -337,6 +353,178 @@ html.dark textarea {
 html.dark option {
   background: #0b1220;
   color: #e2e8f0;
+}
+
+/* Dashboard dark surfaces use a cool navy palette instead of neutral gray. */
+html.dark .dashboard-sidebar {
+  background: #000000 !important;
+  border-right: 1px solid #1e293b;
+  box-shadow: 12px 0 32px rgba(2, 6, 23, 0.2) !important;
+}
+
+html.dark .dashboard-sidebar a {
+  color: #fca5a5;
+}
+
+html.dark .dashboard-sidebar a:hover {
+  background: rgba(127, 29, 29, 0.45);
+  color: #fecaca;
+}
+
+html.dark .dashboard-sidebar a[aria-current="page"] {
+  background: rgba(153, 27, 27, 0.6);
+  color: #fee2e2;
+}
+
+html.dark .dashboard-sidebar button:not([class*="text-red"]) {
+  color: #fca5a5;
+}
+
+html.dark .dashboard-sidebar button:not([class*="text-red"]):hover {
+  color: #e2e8f0;
+}
+
+html.dark .dashboard-sidebar button.text-red-500 {
+  color: #fca5a5 !important;
+}
+
+html.dark .dashboard-sidebar button.text-red-500:hover {
+  color: #fee2e2 !important;
+}
+
+html.dark .dashboard-main {
+  background: #020617 !important;
+}
+
+html.dark .dashboard-menu-button {
+  background: #111c2f !important;
+  color: #cbd5e1 !important;
+  border: 1px solid #26364d;
+}
+
+html.dark .landing-navbar {
+  background: #000000 !important;
+  border-color: #1e293b !important;
+}
+
+html.dark .landing-navbar .bg-white {
+  background: #000000 !important;
+}
+
+html.dark .transaction-surface {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 20px 60px -40px rgba(0, 0, 0, 0.8) !important;
+}
+
+html.dark .transaction-hero {
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.13), transparent 30%),
+    radial-gradient(circle at top right, rgba(139, 92, 246, 0.12), transparent 25%),
+    linear-gradient(135deg, #0f172a, #111c35 55%, #172554) !important;
+}
+
+html.dark .transaction-card,
+html.dark .transaction-chart {
+  background: #111c2f !important;
+  border-color: #26364d !important;
+}
+
+html.dark .transaction-card:hover {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 16px 34px rgba(2, 6, 23, 0.45) !important;
+}
+
+html.dark .transaction-category-card {
+  border-color: rgba(96, 165, 250, 0.28) !important;
+  background-image: linear-gradient(135deg, #172554, #172033) !important;
+}
+
+html.dark .transaction-page .bg-emerald-100 {
+  background-color: rgba(16, 185, 129, 0.16) !important;
+  color: #6ee7b7 !important;
+}
+
+html.dark .transaction-page .bg-rose-100 {
+  background-color: rgba(244, 63, 94, 0.16) !important;
+  color: #fda4af !important;
+}
+
+html.dark .transaction-page .bg-sky-100 {
+  background-color: rgba(14, 165, 233, 0.16) !important;
+  color: #7dd3fc !important;
+}
+
+html.dark .transaction-page .bg-white\/80,
+html.dark .transaction-page .bg-slate-50,
+html.dark .transaction-page .bg-slate-50\/70,
+html.dark .transaction-page .bg-slate-100 {
+  background-color: #162235 !important;
+}
+
+html.dark .transaction-page .border-slate-200,
+html.dark .transaction-page .border-slate-300 {
+  border-color: #2b3b52 !important;
+}
+
+html.dark .transaction-page .hover\:bg-white:hover,
+html.dark .transaction-page .hover\:bg-slate-50:hover,
+html.dark .transaction-page .hover\:bg-slate-100:hover,
+html.dark .transaction-page .hover\:bg-slate-200:hover {
+  background-color: #1e3351 !important;
+}
+
+html.dark .transaction-modal {
+  background: #0f172a !important;
+  border-color: #26364d !important;
+}
+
+/* Transaction feed semantic tokens: all text remains AAA-readable on dark surfaces. */
+html.dark .transaction-page {
+  color: var(--text-primary);
+}
+
+html.dark .transaction-page .text-slate-900,
+html.dark .transaction-page .transaction-title,
+html.dark .transaction-page .transaction-amount {
+  color: var(--text-primary) !important;
+}
+
+html.dark .transaction-page .text-slate-400,
+html.dark .transaction-page .text-slate-500,
+html.dark .transaction-page .text-slate-600,
+html.dark .transaction-page .transaction-meta {
+  color: var(--text-secondary) !important;
+}
+
+html.dark .transaction-page .transaction-action-button {
+  border-color: var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+  background: transparent;
+}
+
+html.dark .transaction-page .transaction-action-button:hover {
+  background: rgba(71, 85, 105, 0.5) !important;
+  border-color: #94a3b8 !important;
+  color: var(--text-primary) !important;
+}
+
+html.dark .transaction-page .transaction-direction-badge,
+html.dark .transaction-page .transaction-type-badge {
+  border-color: rgba(248, 113, 113, 0.35) !important;
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fecaca !important;
+}
+
+html.dark .transaction-page .transaction-direction-badge:has(.lucide-arrow-up-right),
+html.dark .transaction-page .transaction-type-badge[class*="emerald"] {
+  border-color: rgba(52, 211, 153, 0.35) !important;
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #a7f3d0 !important;
+}
+
+html.dark .transaction-page .transaction-amount.text-emerald-600 {
+  color: #a7f3d0 !important;
 }
 
 @media (max-width: 786px) {

@@ -165,7 +165,7 @@ const Landing = () => {
         keywords="expense tracker, split bills, roommate expense app, budget tracker"
         path="/"
       />
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 px-4 py-4 backdrop-blur sm:px-6">
+      <header className="landing-navbar sticky top-0 z-50 border-b border-slate-200 bg-white/90 px-4 py-4 backdrop-blur sm:px-6">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <Link to="/" className="text-xl font-bold text-indigo-700 sm:text-2xl">
             TrackExpense

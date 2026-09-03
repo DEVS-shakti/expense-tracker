@@ -404,9 +404,9 @@ const Transactions = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6">
-      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_25px_80px_-40px_rgba(15,23,42,0.35)]">
-        <div className="grid gap-6 bg-[radial-gradient(circle_at_top_left,_rgba(14,165,233,0.16),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(244,114,182,0.12),_transparent_25%),linear-gradient(135deg,_#ffffff,_#f8fafc_55%,_#eef2ff)] p-6 lg:grid-cols-[1.4fr_0.9fr] lg:p-8">
+    <div className="transaction-page mx-auto max-w-7xl space-y-6 p-4 sm:p-6">
+      <section className="transaction-surface overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_25px_80px_-40px_rgba(15,23,42,0.35)]">
+        <div className="transaction-hero grid gap-6 bg-[radial-gradient(circle_at_top_left,_rgba(14,165,233,0.16),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(244,114,182,0.12),_transparent_25%),linear-gradient(135deg,_#ffffff,_#f8fafc_55%,_#eef2ff)] p-6 lg:grid-cols-[1.4fr_0.9fr] lg:p-8">
           <div className="space-y-5">
             <span className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-sky-700">
               <Sparkles className="h-3.5 w-3.5" />
@@ -530,7 +530,7 @@ const Transactions = () => {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.35)]">
+        <div className="transaction-surface rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.35)]">
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">
@@ -569,7 +569,7 @@ const Transactions = () => {
                     onClick={() =>
                       openCreateModal({ type: "expense", category: category.name })
                     }
-                    className={`group rounded-[1.75rem] border bg-gradient-to-br p-5 text-left transition duration-200 hover:-translate-y-1 hover:shadow-xl ${getCategoryTone(index)}`}
+                     className={`transaction-category-card group rounded-[1.75rem] border bg-gradient-to-br p-5 text-left transition duration-200 hover:-translate-y-1 hover:shadow-xl ${getCategoryTone(index)}`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -603,7 +603,7 @@ const Transactions = () => {
           )}
         </div>
 
-        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.35)]">
+        <div className="transaction-surface rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.35)]">
           <div className="mb-5">
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">
               Category View
@@ -697,7 +697,7 @@ const Transactions = () => {
         </div>
       </section>
 
-      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.35)]">
+      <section className="transaction-surface rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.35)]">
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">
@@ -727,7 +727,7 @@ const Transactions = () => {
           />
         ) : (
           <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-[1.6rem] border border-slate-200 bg-[linear-gradient(180deg,_#ffffff,_#f8fafc)] p-4">
+             <div className="transaction-chart rounded-[1.6rem] border border-slate-200 bg-[linear-gradient(180deg,_#ffffff,_#f8fafc)] p-4">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold text-slate-900">
@@ -833,7 +833,7 @@ const Transactions = () => {
         )}
       </section>
 
-      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.35)]">
+      <section className="transaction-surface rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.35)]">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -910,11 +910,11 @@ const Transactions = () => {
               {filteredTransactions.map((txn) => (
                 <article
                   key={txn.id}
-                  className="flex flex-col gap-4 rounded-[1.6rem] border border-slate-200 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98),_rgba(248,250,252,0.96))] p-5 transition hover:border-slate-300 hover:shadow-lg sm:flex-row sm:items-center sm:justify-between"
+                  className="transaction-card flex flex-col gap-4 rounded-[1.6rem] border border-slate-200 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98),_rgba(248,250,252,0.96))] p-5 transition hover:border-slate-300 hover:shadow-lg sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="flex items-start gap-4">
                     <div
-                      className={`rounded-2xl p-3 ${
+                      className={`transaction-direction-badge rounded-2xl border p-3 ${
                         txn.type === "income"
                           ? "bg-emerald-100 text-emerald-700"
                           : "bg-rose-100 text-rose-700"
@@ -929,11 +929,11 @@ const Transactions = () => {
 
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="text-lg font-semibold text-slate-900">
+                        <h3 className="transaction-title text-lg font-semibold text-slate-900">
                           {txn.category}
                         </h3>
                         <span
-                          className={`rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${
+                          className={`transaction-type-badge rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${
                             txn.type === "income"
                               ? "bg-emerald-100 text-emerald-700"
                               : "bg-rose-100 text-rose-700"
@@ -942,7 +942,7 @@ const Transactions = () => {
                           {txn.type}
                         </span>
                       </div>
-                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
+                      <div className="transaction-meta flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
                         <span>{formatDisplayDate(txn.date)}</span>
                         <span className="inline-flex items-center gap-1">
                           <Receipt className="h-3.5 w-3.5" />
@@ -954,7 +954,7 @@ const Transactions = () => {
 
                   <div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
                     <p
-                      className={`text-xl font-semibold ${
+                      className={`transaction-amount text-xl font-semibold ${
                         txn.type === "income" ? "text-emerald-600" : "text-slate-900"
                       }`}
                     >
@@ -966,7 +966,7 @@ const Transactions = () => {
                       {txn.type === "expense" && (
                         <Link
                           to={`/roommate-splits?transaction=${txn.id}`}
-                          className="rounded-2xl border border-violet-200 p-3 text-violet-600 transition hover:bg-violet-50"
+                          className="transaction-action-button rounded-2xl border border-violet-200 p-3 text-violet-600 transition hover:bg-violet-50"
                           aria-label={`Split ${txn.category} with roommates`}
                         >
                           <HandCoins className="h-4 w-4" />
@@ -975,7 +975,7 @@ const Transactions = () => {
                       <button
                         type="button"
                         onClick={() => openEditModal(txn)}
-                        className="rounded-2xl border border-slate-200 p-3 text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
+                        className="transaction-action-button rounded-2xl border border-slate-200 p-3 text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
                         aria-label={`Edit ${txn.category}`}
                       >
                         <Pencil className="h-4 w-4" />
@@ -984,7 +984,7 @@ const Transactions = () => {
                         type="button"
                         onClick={() => handleDelete(txn.id)}
                         disabled={deletingId === txn.id}
-                        className="rounded-2xl border border-rose-200 p-3 text-rose-600 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="transaction-action-button rounded-2xl border border-rose-200 p-3 text-rose-600 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
                         aria-label={`Delete ${txn.category}`}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -1000,7 +1000,7 @@ const Transactions = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-2xl overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl">
+          <div className="transaction-modal w-full max-w-2xl overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl">
             <div className="flex items-start justify-between border-b border-slate-200 bg-[linear-gradient(135deg,_#0f172a,_#1e293b_60%,_#334155)] px-6 py-5 text-white">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/65">
